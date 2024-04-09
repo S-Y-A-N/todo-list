@@ -1,0 +1,57 @@
+:root {
+    --back-bg: rgb(255, 225, 225);
+    --main-bg: rgb(255, 200, 200);
+    --highlight-light: rgb(255, 150, 150);
+    --highlight-dark: rgb(255, 80, 80);
+
+}
+
+body {
+    background-color: var(--back-bg);
+}
+
+/* Header */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 2rem;
+}
+
+h1 > span {
+    color: var(--highlight-dark);
+    text-decoration: underline wavy 2px var(--highlight-light);
+}
+
+h1 > span:hover {
+    cursor: pointer;
+    color: var(--highlight-light);
+    text-decoration-color: var(--highlight-dark);
+}
+
+#projectBtn {
+    background: none;
+    border: none;
+    text-decoration: underline;
+}
+
+#projectBtn:hover {
+    cursor: pointer;
+    color: var(--highlight-dark);
+}
+
+/* Main */
+#taskList {
+    background-color: var(--main-bg);
+    margin: 0 5rem;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+}
