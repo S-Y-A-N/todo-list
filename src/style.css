@@ -3,7 +3,9 @@
     --main-bg: rgb(255, 200, 200);
     --highlight-light: rgb(255, 150, 150);
     --highlight-dark: rgb(255, 80, 80);
-
+    --active-light: rgb(255, 220, 220);
+    --gray: rgb(175, 175, 175);
+    --dark-gray: rgb(54, 54, 54);
 }
 
 body {
@@ -44,14 +46,61 @@ h1 > span:hover {
 #taskList {
     background-color: var(--main-bg);
     margin: 0 5rem;
-    padding: 1rem;
+    padding: 2rem;
+    border-radius: 1rem;
 
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.task {
+.task-header, .task {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+}
+
+.task-header > span:first-child, .task > span:first-child { margin-right: auto; }
+
+.task-header > span:last-child, .task > span:last-child { margin-left: auto; }
+
+.task-header > span {
+    font-weight: bold;
+}
+
+.task > span:first-child {
+    background-color: var(--gray);
+    color: var(--dark-gray);
+    padding: .5rem;
+    border-radius: .5rem;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.task > span:first-child:hover {
+    cursor: pointer;
+    background-color: var(--active-light);
+    color: var(--highlight-dark);
+    padding: .5rem;
+    border-radius: .5rem;
+    text-decoration: underline wavy 2px var(--highlight-light);
+}
+
+.task > span:nth-child(2) { 
+    flex: 1;
+}
+
+#addTaskBtn {
+    background-color: var(--highlight-light);
+    color: initial;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#addTaskBtn:hover {
+    cursor: pointer;
+    background-color: var(--highlight-dark);
+    color: var(--active-light);
 }
