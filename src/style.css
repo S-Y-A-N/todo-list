@@ -84,7 +84,7 @@ header > .nav {
 
 /* Main */
 
-#taskList {
+#taskContainer {
     background-color: var(--main-bg);
     margin: 0 5rem;
     padding: 2rem;
@@ -93,6 +93,11 @@ header > .nav {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+}
+
+#taskList > p {
+    margin: 0;
+    text-align: center;
 }
 
 .task-header, .task {
