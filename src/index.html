@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dialog.css">
     <script defer src="index.js"></script>
     <title>// TODO</title>
 </head>
@@ -51,10 +52,31 @@
                 <span class="task-date">9/4/2024</span>
             </div> -->
             </div>
-            <button id="addTaskBtn"><span>+</span> Add Task</button>
+            <button id="dialogBtn"><span>+</span> Add Task</button>
         </div>
 
-        
+        <dialog id="addDialog">
+            <button id="closeDialog">⨯</button>
+            <form method="dialog">
+                <div>
+                    <label for="desc">Task Description</label>
+                    <input type="text" id="desc" required>
+                </div>
+    
+                <div>
+                    <label for="project">Project (optional)</label>
+                    <input type="text" id="project" required>
+                </div>
+
+                <div>
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+
+                <button id="submit" type="submit">Add Task</button>
+            </form>
+        </dialog>
+
     </main>
 </body>
 </html>

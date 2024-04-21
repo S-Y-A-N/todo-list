@@ -47,16 +47,21 @@ export const DOM = (function () {
 
         taskList.appendChild(taskDiv);
     }
-
-
     const isTaskListEmpty = () => TODO.isEmpty();
 
     const handleNoTasks = () => {
         if (isTaskListEmpty)
             noTasksMsg.classList.add('hidden');
         else
-            noTasksMsg.classList.remove('hidden')
+            noTasksMsg.classList.remove('hidden');
     }
+
+
+    const dialogBtn = document.getElementById('dialogBtn');
+    dialogBtn.addEventListener('click', () => addDialog.showModal());
+    closeDialog.addEventListener('click', () => addDialog.close());
+    submit.addEventListener('click', addBookToLibrary);
+
 
     return { addTodoItem }
 
