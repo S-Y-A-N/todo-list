@@ -56,11 +56,40 @@ export const DOM = (function () {
             noTasksMsg.classList.remove('hidden');
     }
 
+    const extractTodoInfo = () => {
+        let project = document.getElementById('project').value;
+        const desc = document.getElementById('desc').value;
+        const date = document.getElementById('date').value;
+        const priority = document.getElementById('priority').value;
+
+        if(desc == '' || date == '' || priority == '') return;
+        if(project == '') project = 'Default';
+
+        const todo = TodoObject(project, desc, date, priority);
+
+        addTodoItem(todo);
+
+        closeDialog();
+    }
+
+    const clearInputs = () => {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => input.value = "");
+    }
+
+    const closeDialog = () => {
+        clearInputs();
+        addDialog.close();
+    }
+
 
     const dialogBtn = document.getElementById('dialogBtn');
+    const closeDialogBtn = document.getElementById('closeDialogBtn');
+    const addDialog = document.getElementById('addDialog')
+
     dialogBtn.addEventListener('click', () => addDialog.showModal());
-    closeDialog.addEventListener('click', () => addDialog.close());
-    submit.addEventListener('click', addBookToLibrary);
+    closeDialogBtn.addEventListener('click', closeDialog);
+    submit.addEventListener('click', extractTodoInfo);
 
 
     return { addTodoItem }
