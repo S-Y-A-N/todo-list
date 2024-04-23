@@ -43,7 +43,7 @@ dialog button {
     margin-top: 2rem;
 }
 
-#closeDialog {
+#closeDialogBtn {
     background: none;
     box-shadow: none;
     border: none;
@@ -56,6 +56,6 @@ dialog button {
     right: 25px;
 }
 
-#closeDialog:hover {
+#closeDialogBtn:hover {
     color: rgb(124, 0, 0);
 }
