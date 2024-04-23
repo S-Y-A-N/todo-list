@@ -99,6 +99,12 @@ header > .nav {
     gap: 2rem;
 }
 
+#taskList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 #taskList > p {
     margin: 0;
     text-align: center;
@@ -154,7 +160,7 @@ header > .nav {
     margin-right: .3rem;
 }
 
-#dialogBtn:hover {
+#dialogBtn:hover, #submit:hover {
     cursor: pointer;
     background-color: var(--highlight-dark);
     color: var(--active-light);
