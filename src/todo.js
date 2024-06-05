@@ -1,21 +1,34 @@
-export function TodoObject(project, desc, dueDate, priority) {
-    const todoItem = { project, desc, dueDate, priority };
-
-    TODO.addTask(todoItem);
-
-    return todoItem;
-}
-
 export const TODO = (function () {
-    let taskList = [];
 
-    const addTask = (task) => taskList.push(task);
+    function create(title, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
+        const task = { title, desc, project, priority, dueDate, complete };
+    
+        addToProject(task.project, task)
+    
+        return task;
+    }
 
-    const isEmpty = () => taskList.length === 0;
+    const addToProject = (project, task) => project.list.push(task);
 
-    console.log(taskList)
+    const toggleComplete = (task) => task.complete = !task.complete;
 
-    return { addTask, isEmpty }
+    return { create }
+})();
+
+export const Project = (function () {
+    let projects = [];
+
+
+    function create(title) {
+        let list = [];
+        const project = { title, list}
+        projects.push(project);
+        return project;
+    }
+
+    const get = (index) => projects[index];
+
+    return { create, get }
 })();
 
 export const DOM = (function () {
@@ -31,8 +44,8 @@ export const DOM = (function () {
         const taskDesc = document.createElement('span');
         const taskDate = document.createElement('span');
 
-        taskProject.textContent = todo.project;
-        taskDesc.textContent = todo.desc;
+        taskProject.textContent = todo.project.title;
+        taskDesc.textContent = todo.title;
         taskDate.textContent = todo.dueDate;
 
         taskDiv.classList.add('task');
@@ -47,7 +60,7 @@ export const DOM = (function () {
 
         taskList.appendChild(taskDiv);
     }
-    const isTaskListEmpty = () => TODO.isEmpty();
+    const isTaskListEmpty = () => TODO.isTaskListEmpty();
 
     const handleNoTasks = () => {
         if (isTaskListEmpty)
@@ -57,15 +70,13 @@ export const DOM = (function () {
     }
 
     const extractTodoInfo = () => {
-        let project = document.getElementById('project').value;
+        const title = document.getElementById('project').value;
         const desc = document.getElementById('desc').value;
+        const project = document.getElementById('project').value;
         const date = document.getElementById('date').value;
         const priority = document.getElementById('priority').value;
 
-        if(desc == '' || date == '' || priority == '') return;
-        if(project == '') project = 'Default';
-
-        const todo = TodoObject(project, desc, date, priority);
+        const todo = TodoObject(title, desc, project, priority, date, );
 
         addTodoItem(todo);
 
