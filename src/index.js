@@ -1,7 +1,8 @@
-import { TodoObject, DOM, TODO } from "./todo";
+import { TodoObject, DOM, TODO, Project } from "./todo";
 import './style.css';
 
-const todo1 = TodoObject('Fitness', 'Play volleyball', new Date().toLocaleDateString(), 3);
+Project.create('inbox');
 
-DOM.addTodoItem(todo1);
-DOM.addTodoItem(todo1);
+let t1 = TODO.create('Apply for job', "", Project.get(0), 0, new Date().toLocaleDateString(), false);
+console.log(Project.get(0).title)
+DOM.addTodoItem(t1);
