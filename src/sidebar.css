@@ -1,0 +1,47 @@
+/* SIDEBAR POSITION */
+.sidebar {
+    background-color: #f1f1f1;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 300px;
+}
+
+.sidebar-content {
+    padding: 1rem;
+}
+
+.sidebar-content button {
+    background: none;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    padding: 1rem 0 1rem 1.5rem;
+    text-align: left;
+}
+
+.sidebar-content button:hover {
+    background: rgb(233, 233, 233);
+}
+
+.sidebar-content > div {
+    margin-bottom: 2rem;
+}
+
+.sidebar-content > div > * {
+    margin-bottom: 8px;
+}
+
+/* SIDEBAR HIDDEN STATE */
+.sidebar[aria-hidden="true"] {
+    transition: 200ms;
+    transform: translateX(-100%);
+}
+
+/* SIDEBAR VISIBLE STATE */
+.sidebar:not([aria-hidden]),
+.sidebar[aria-hidden="false"] {
+    transition: 200ms;
+    transform: translateX(0);
+}

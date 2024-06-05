@@ -5,10 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="dialog.css">
+    <link rel="stylesheet" href="sidebar.css">
     <script defer src="index.js"></script>
+    <script defer src="sidebar.js"></script>
     <title>// TODO</title>
 </head>
 <body>
+
+    
+
+    <aside id="sidebar" class="sidebar" aria-hidden="false">
+        <div class="sidebar-content">
+            <div>
+                <section><button>Add task</button></section>
+                <section><button>All</button></section>
+                <section><button>Inbox</button></section>
+                <section><button>Today</button></section>
+                <section><button>Tommorow</button></section>
+                <section><button>Week</button></section>
+            </div>
+    
+            <div>
+                <button>My Projects</button>
+            </div>
+        </div>
+    </aside>
+
+    <button data-toggle-sidebar="sidebar">Toggle Sidebar</button>
+
     <header>
         <div class="logo">
             <h1><span>Today</span> Tasks</h1>
