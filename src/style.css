@@ -31,6 +31,14 @@ button:hover {
     cursor: pointer;
 }
 
+svg {
+    fill: var(--highlight-light);
+}
+
+svg:hover {
+    fill: var(--highlight-dark);
+}
+
 /* Header */
 header {
     display: flex;

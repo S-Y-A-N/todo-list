@@ -12,16 +12,16 @@
     padding: 1rem;
 }
 
-.sidebar-content button {
+.sidebar-content section > button {
     background: none;
     border: none;
     border-radius: 5px;
     width: 100%;
-    padding: 1rem 0 1rem 1.5rem;
+    padding: 1rem .5rem 1rem 1.5rem;
     text-align: left;
 }
 
-.sidebar-content button:hover {
+.sidebar-content section > button:hover {
     background: rgb(233, 233, 233);
 }
 
@@ -31,6 +31,25 @@
 
 .sidebar-content > div > * {
     margin-bottom: 8px;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 0 1rem
+}
+
+.project-nav button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-toggle {
+    background: none;
+    border: none;
 }
 
 /* SIDEBAR HIDDEN STATE */
