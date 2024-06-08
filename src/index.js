@@ -1,6 +1,7 @@
-import { TodoObject, DOM, TODO, Project } from "./todo";
+import { DOM, TODO, Project } from "./todo";
 import './style.css';
-import './sidebar.css'
+import './sidebar.css';
+import './dialog.css'
 
 Project.create('inbox');
 
