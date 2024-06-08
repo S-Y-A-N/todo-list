@@ -2,9 +2,6 @@
 .sidebar {
     background-color: #f1f1f1;
     height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
     min-width: 300px;
 }
 
@@ -19,6 +16,9 @@
     width: 100%;
     padding: 1rem .5rem 1rem 1.5rem;
     text-align: left;
+
+    display: flex;
+    align-items: center;
 }
 
 .sidebar-content section > button:hover {
@@ -52,15 +52,15 @@
     border: none;
 }
 
-/* SIDEBAR HIDDEN STATE */
-.sidebar[aria-hidden="true"] {
-    transition: 200ms;
-    transform: translateX(-100%);
+aside {
+    flex: 0 0 300px;
+    transition: margin 0.3s ease
 }
 
-/* SIDEBAR VISIBLE STATE */
-.sidebar:not([aria-hidden]),
-.sidebar[aria-hidden="false"] {
-    transition: 200ms;
-    transform: translateX(0);
+input ~ aside {
+    margin-left: -300px;
+}
+
+input:checked ~ aside {
+    margin-left: 0;
 }
