@@ -1,1 +1,136 @@
-"use strict";(self.webpackChunktodo_list=self.webpackChunktodo_list||[]).push([[57],{407:()=>{const e={create:function(e,n="",d=t.get(0),c=0,o="",a=!1){const l={title:e,desc:n,project:d,priority:c,dueDate:o,complete:a};return((e,t)=>{e.list.push(t)})(l.project,l),l}},t=function(){let e=[];return{create:function(t){const n={title:t,list:[]};return e.push(n),n},get:t=>e[t]}}(),n=function(){const t=document.getElementById("taskList"),n=t.getElementsByTagName("p")[0],d=e=>{o();const n=document.createElement("div"),d=document.createElement("span"),c=document.createElement("span"),a=document.createElement("span");d.textContent=e.project.title,c.textContent=e.title,a.textContent=e.dueDate,n.classList.add("task"),d.classList.add("task-project"),c.classList.add("task-desc"),a.classList.add("task-date"),n.appendChild(d),n.appendChild(c),n.appendChild(a),t.appendChild(n)},c=()=>e.isTaskListEmpty(),o=()=>{c?n.classList.add("hidden"):n.classList.remove("hidden")},a=()=>{document.querySelectorAll("input").forEach((e=>e.value="")),i.close()},l=document.getElementById("dialogBtn"),s=document.getElementById("closeDialogBtn"),i=document.getElementById("addDialog");return l.addEventListener("click",(()=>i.showModal())),s.addEventListener("click",a),submit.addEventListener("click",(()=>{const e=document.getElementById("project").value,t=document.getElementById("desc").value,n=document.getElementById("project").value,c=document.getElementById("date").value,o=document.getElementById("priority").value,l=TodoObject(e,t,n,o,c);d(l),a()})),{addTodoItem:d}}();t.create("inbox");let d=e.create("Apply for job","",t.get(0),0,(new Date).toLocaleDateString(),!1);console.log(t.get(0).title),n.addTodoItem(d)}},e=>{e(e.s=407)}]);
+"use strict";
+(self["webpackChunktodo_list"] = self["webpackChunktodo_list"] || []).push([[57],{
+
+/***/ 407:
+/***/ (() => {
+
+
+;// CONCATENATED MODULE: ./src/todo.js
+const TODO = (function () {
+
+    function create(title, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
+        const task = { title, desc, project, priority, dueDate, complete };
+    
+        addToProject(task.project, task)
+    
+        return task;
+    }
+
+    const addToProject = (project, task) => project.list.push(task);
+
+    const toggleComplete = (task) => task.complete = !task.complete;
+
+    return { create }
+})();
+
+const Project = (function () {
+    let projects = [];
+
+
+    function create(title) {
+        let list = [];
+        const project = { title, list}
+        projects.push(project);
+        return project;
+    }
+
+    const get = (index) => projects[index];
+
+    return { create, get }
+})();
+
+const DOM = (function () {
+    const taskList = document.getElementById('taskList');
+    const noTasksMsg = taskList.getElementsByTagName('p')[0];
+
+    const addTodoItem = (todo) => {
+        handleNoTasks();
+        
+        const taskDiv = document.createElement('div');
+
+        const taskProject = document.createElement('span');
+        const taskDesc = document.createElement('span');
+        const taskDate = document.createElement('span');
+
+        taskProject.textContent = todo.project.title;
+        taskDesc.textContent = todo.title;
+        taskDate.textContent = todo.dueDate;
+
+        taskDiv.classList.add('task');
+
+        taskProject.classList.add('task-project');
+        taskDesc.classList.add('task-desc');
+        taskDate.classList.add('task-date');
+
+        taskDiv.appendChild(taskProject);
+        taskDiv.appendChild(taskDesc);
+        taskDiv.appendChild(taskDate);
+
+        taskList.appendChild(taskDiv);
+    }
+    const isTaskListEmpty = () => TODO.isTaskListEmpty();
+
+    const handleNoTasks = () => {
+        if (isTaskListEmpty)
+            noTasksMsg.classList.add('hidden');
+        else
+            noTasksMsg.classList.remove('hidden');
+    }
+
+    const extractTodoInfo = () => {
+        const title = document.getElementById('project').value;
+        const desc = document.getElementById('desc').value;
+        const project = document.getElementById('project').value;
+        const date = document.getElementById('date').value;
+        const priority = document.getElementById('priority').value;
+
+        const todo = TodoObject(title, desc, project, priority, date, );
+
+        addTodoItem(todo);
+
+        closeDialog();
+    }
+
+    const clearInputs = () => {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => input.value = "");
+    }
+
+    const closeDialog = () => {
+        clearInputs();
+        addDialog.close();
+    }
+
+
+    const dialogBtn = document.getElementById('dialogBtn');
+    const closeDialogBtn = document.getElementById('closeDialogBtn');
+    const addDialog = document.getElementById('addDialog')
+
+    dialogBtn.addEventListener('click', () => addDialog.showModal());
+    closeDialogBtn.addEventListener('click', closeDialog);
+    submit.addEventListener('click', extractTodoInfo);
+
+
+    return { addTodoItem }
+
+})();
+;// CONCATENATED MODULE: ./src/index.js
+
+
+
+
+
+Project.create('inbox');
+
+let t1 = TODO.create('Apply for job', "", Project.get(0), 0, new Date().toLocaleDateString(), false);
+console.log(Project.get(0).title)
+DOM.addTodoItem(t1);
+
+/***/ })
+
+},
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(407));
+/******/ }
+]);
