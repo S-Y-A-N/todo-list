@@ -18,9 +18,10 @@
 }
 
 body {
-    max-width: 1080px;
     margin-inline: auto;
     background-color: var(--back-bg);
+    margin: 0;
+    min-width: fit-content;
 }
 
 .hidden {
@@ -33,10 +34,29 @@ button:hover {
 
 svg {
     fill: var(--highlight-light);
+    margin-right: 8px;
 }
 
 svg:hover {
     fill: var(--highlight-dark);
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    min-width: fit-content;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+@media (max-width: 750px) {
+    .main-content {
+        min-width: 325px;
+    }
 }
 
 /* Header */
@@ -62,6 +82,11 @@ header > .nav {
     display: flex;
     align-items: center;
     gap: .5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
 }
 
 #projectBtn {
