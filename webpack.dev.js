@@ -7,4 +7,13 @@ module.exports = merge(common, {
   devServer: {
     static: './src',
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        // 'style-loader' conflicts with MiniCssExtractPlugin
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
 });
