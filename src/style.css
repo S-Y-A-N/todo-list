@@ -178,27 +178,6 @@ header > .nav {
     flex: 1;
 }
 
-#dialogBtn, #submit {
-    background-color: var(--highlight-light);
-    color: initial;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 1rem;
-    font-weight: bold;
-    font-size: 1rem;
-}
-
-#dialogBtn > span {
-    font-family: sans-serif;
-    margin-right: .3rem;
-}
-
-#dialogBtn:hover, #submit:hover {
-    cursor: pointer;
-    background-color: var(--highlight-dark);
-    color: var(--active-light);
-}
-
 .priority-title {
     margin: 0;
 }
