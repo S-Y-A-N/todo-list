@@ -9,6 +9,7 @@
     --active-light: rgb(255, 220, 220);
     --gray: rgb(175, 175, 175);
     --dark-gray: rgb(54, 54, 54);
+    --light-gray: rgb(230, 230, 230);
     --main-font: "Josefin Sans", sans-serif;
     --date-font: "Rubik", sans-serif;
 }
