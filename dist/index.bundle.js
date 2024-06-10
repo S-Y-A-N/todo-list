@@ -8,8 +8,8 @@
 ;// CONCATENATED MODULE: ./src/todo.js
 const TODO = (function () {
 
-    function create(title, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
-        const task = { title, desc, project, priority, dueDate, complete };
+    function create(name, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
+        const task = { name, desc, project, priority, dueDate, complete };
     
         addToProject(task.project, task)
     
@@ -27,9 +27,9 @@ const Project = (function () {
     let projects = [];
 
 
-    function create(title) {
+    function create(name) {
         let list = [];
-        const project = { title, list}
+        const project = { name, list }
         projects.push(project);
         return project;
     }
@@ -52,8 +52,8 @@ const DOM = (function () {
         const taskDesc = document.createElement('span');
         const taskDate = document.createElement('span');
 
-        taskProject.textContent = todo.project.title;
-        taskDesc.textContent = todo.title;
+        taskProject.textContent = todo.project.name;
+        taskDesc.textContent = todo.name;
         taskDate.textContent = todo.dueDate;
 
         taskDiv.classList.add('task');
@@ -78,13 +78,13 @@ const DOM = (function () {
     }
 
     const extractTodoInfo = () => {
-        const title = document.getElementById('project').value;
+        const name = document.getElementById('name').value;
         const desc = document.getElementById('desc').value;
-        const project = document.getElementById('project').value;
+        // const project = document.getElementById('project').value;
         const date = document.getElementById('date').value;
         const priority = document.getElementById('priority').value;
 
-        const todo = TodoObject(title, desc, project, priority, date, );
+        const todo = TODO.create(name, desc, Project.get(0), priority, date, false);
 
         addTodoItem(todo);
 
@@ -104,11 +104,11 @@ const DOM = (function () {
 
     const dialogBtn = document.getElementById('dialogBtn');
     const closeDialogBtn = document.getElementById('closeDialogBtn');
-    const addDialog = document.getElementById('addDialog')
+    const submitTask = document.getElementById('submitTask')
 
     dialogBtn.addEventListener('click', () => addDialog.showModal());
     closeDialogBtn.addEventListener('click', closeDialog);
-    submit.addEventListener('click', extractTodoInfo);
+    submitTask.addEventListener('click', extractTodoInfo);
 
 
     return { addTodoItem }
@@ -123,8 +123,18 @@ const DOM = (function () {
 Project.create('inbox');
 
 let t1 = TODO.create('Apply for job', "", Project.get(0), 0, new Date().toLocaleDateString(), false);
+console.log(Project.get(0).title)
+DOM.addTodoItem(t1);
 
-// DOM.addTodoItem(t1);
+
+// visaul
+function auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight) + "px";
+}
+
+document.getElementById('name').addEventListener('input', e => auto_grow(e.target))
+document.getElementById('desc').addEventListener('input', e => auto_grow(e.target))
 
 /***/ })
 
