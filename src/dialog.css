@@ -1,61 +1,96 @@
+dialog::backdrop {
+    background: none;
+}
+
 dialog {
-    width: 330px;
-    padding: 2.5rem 1.5rem;
+    padding: 1.2rem 1.3rem;
     border: none;
     border-radius: 1rem;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    min-width: fit-content;
+    width: 500px;
 
-    position: relative;
+    /* positioning */
+    margin: 0;
+    transform: translate(-50%, 35%);
+    left: 50%;
 }
 
-dialog > form {
-    display: flex;
-    flex-direction: column;
-
-    margin: 0 1rem;
-}
-
-dialog > form > div {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.5rem;
-}
-
-dialog label {
-    font-size: 1.2rem;
-    margin-bottom: .3rem;
-    margin-left: .2rem;
-}
-
-dialog input {
+dialog textarea {
+    border: none;
     outline: none;
-    height: 1.9rem;
-    border: 1px solid var(--back-bg);
-    border-radius: .5rem;
-    padding-left: .5rem;
+    width: 100%;
+    resize: none;
+    height: 1.3rem;
 }
 
-dialog input:focus {
-    border-color: var(--main-bg);
+#name {
+    font-size: 1.3rem;
+    font-weight: bold;
+
 }
 
-dialog button {
-    align-self: center;
-    margin-top: 2rem;
+#desc {
+    font-size: 1rem;
+    margin-top: 4px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 12px 8px;
+    color: white;
+    font-weight: bold;
+}
+
+#submitTask {
+    background: var(--highlight-dark);
 }
 
 #closeDialogBtn {
-    background: none;
-    box-shadow: none;
-    border: none;
-    padding: 0;
-    font-size: 1rem;
-    color: rgb(94, 94, 94);
-
-    position: absolute;
-    top: -15px;
-    right: 25px;
+    color: var(--dark-gray);
 }
 
-#closeDialogBtn:hover {
-    color: rgb(124, 0, 0);
+.task-controls {
+    margin: 4px 0;
+}
+
+.task-controls >  * {
+    background: none;
+    border: none;
+    outline: none;
+
+    padding: 6px;
+    border: 1px solid var(--light-gray);
+}
+
+dialog[open] {
+    animation: fade-in 100ms linear;
+}
+
+dialog:not([open]) {
+    opacity: 0;
+}
+
+@keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    100% {
+      opacity: 0;
+    }
 }
