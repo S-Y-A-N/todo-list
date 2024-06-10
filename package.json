@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack serve --open --config webpack.dev.js",
-    "gh": "git subtree push --prefix dist origin gh-pages"
+    "gh": "git subtree push --prefix dist origin gh-pages",
+    "dist": "git commit -m 'Rebuild' dist/"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.8.1",
     "style-loader": "^4.0.0",
+    "svg-inline-loader": "^0.8.2",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4",
