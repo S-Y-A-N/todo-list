@@ -1,7 +1,7 @@
 export const TODO = (function () {
 
-    function create(title, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
-        const task = { title, desc, project, priority, dueDate, complete };
+    function create(name, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
+        const task = { name, desc, project, priority, dueDate, complete };
     
         addToProject(task.project, task)
     
@@ -19,9 +19,9 @@ export const Project = (function () {
     let projects = [];
 
 
-    function create(title) {
+    function create(name) {
         let list = [];
-        const project = { title, list}
+        const project = { name, list }
         projects.push(project);
         return project;
     }
@@ -44,8 +44,8 @@ export const DOM = (function () {
         const taskDesc = document.createElement('span');
         const taskDate = document.createElement('span');
 
-        taskProject.textContent = todo.project.title;
-        taskDesc.textContent = todo.title;
+        taskProject.textContent = todo.project.name;
+        taskDesc.textContent = todo.name;
         taskDate.textContent = todo.dueDate;
 
         taskDiv.classList.add('task');
@@ -70,13 +70,13 @@ export const DOM = (function () {
     }
 
     const extractTodoInfo = () => {
-        const title = document.getElementById('project').value;
+        const name = document.getElementById('name').value;
         const desc = document.getElementById('desc').value;
-        const project = document.getElementById('project').value;
+        // const project = document.getElementById('project').value;
         const date = document.getElementById('date').value;
         const priority = document.getElementById('priority').value;
 
-        const todo = TodoObject(title, desc, project, priority, date, );
+        const todo = TODO.create(name, desc, Project.get(0), priority, date, false);
 
         addTodoItem(todo);
 
@@ -96,11 +96,11 @@ export const DOM = (function () {
 
     const dialogBtn = document.getElementById('dialogBtn');
     const closeDialogBtn = document.getElementById('closeDialogBtn');
-    const addDialog = document.getElementById('addDialog')
+    const submitTask = document.getElementById('submitTask')
 
     dialogBtn.addEventListener('click', () => addDialog.showModal());
     closeDialogBtn.addEventListener('click', closeDialog);
-    submit.addEventListener('click', extractTodoInfo);
+    submitTask.addEventListener('click', extractTodoInfo);
 
 
     return { addTodoItem }
