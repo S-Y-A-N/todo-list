@@ -1,12 +1,26 @@
 /* SIDEBAR POSITION */
 .sidebar {
-    background-color: #f1f1f1;
+    background-color: var(--sidebar);
     height: 100vh;
-    min-width: 300px;
+    min-width: 280px;
+}
+
+.sidebar .logo > div {
+    color: var(--text-color);
+    font-weight: bold;
 }
 
 .sidebar-content {
     padding: 1rem;
+}
+
+#dialogBtn button {
+    font-weight: bold;
+    color: var(--highlight-dark);
+}
+
+#dialogBtn svg {
+    fill: var(--highlight-dark);
 }
 
 .sidebar-content section > button {
@@ -14,15 +28,16 @@
     border: none;
     border-radius: 5px;
     width: 100%;
-    padding: 1rem .5rem 1rem 1.5rem;
+    padding: .5rem;
     text-align: left;
+    color: var(--text-color);
 
     display: flex;
     align-items: center;
 }
 
 .sidebar-content section > button:hover {
-    background: rgb(233, 233, 233);
+    background: var(--gray-highlight);
 }
 
 .sidebar-content > div {
@@ -37,8 +52,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-left: .5rem;
+}
 
-    margin: 0 1rem
+.sidebar-header .sidebar-toggle svg {
+    margin: 0;
 }
 
 .project-nav button {
@@ -53,12 +71,12 @@
 }
 
 aside {
-    flex: 0 0 300px;
+    flex: 0 0 280px;
     transition: margin 0.3s ease
 }
 
 input ~ aside {
-    margin-left: -300px;
+    margin-left: -280px;
 }
 
 input:checked ~ aside {
