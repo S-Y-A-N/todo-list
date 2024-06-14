@@ -139,10 +139,34 @@ function change_theme() {
     document.getElementById('darkModeIcon').classList.toggle('hidden');
 }
 
+function change_page(e) {
+    Array.from(pageTabs).forEach(button => {
+        button.classList.remove('selected');
+    });
+
+    let clickedTab = e.target;
+    if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
+    else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
+
+    const title = document.getElementById('pageTitle');
+    title.textContent = e.target.textContent;
+    
+    clickedTab.classList.add('selected')
+}
+
 document.getElementById('name').addEventListener('input', e => auto_grow(e.target))
 document.getElementById('desc').addEventListener('input', e => auto_grow(e.target))
 
 document.getElementById('themeBtn').addEventListener('click', change_theme)
+
+
+// page changing via sidebar tabs
+const pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
+
+Array.from(pageTabs).forEach(button => {
+    
+    button.addEventListener('click', change_page)
+});
 
 /***/ })
 
