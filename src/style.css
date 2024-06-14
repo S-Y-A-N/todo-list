@@ -23,6 +23,7 @@
     --back-bg: rgb(30, 30, 30);
     --task-container: rgb(38, 38, 38);
     --highlight-light: #c4b5fd;
+    --selected: rgb(76, 45, 95);
     --highlight-dark: #8b5cf6;
     --active-light: #d7c6ff;
     --gray: rgb(155, 155, 155);
@@ -31,7 +32,7 @@
     --text-color: #fff;
     color: #fff;
 
-    --sidebar: rgb(48, 48, 48); /* consider: rgb(38, 38, 38) */
+    --sidebar: rgb(38, 38, 38); /* consider: rgb(38, 38, 38) */
     --dialog: rgb(32, 32, 32);
 }
 
