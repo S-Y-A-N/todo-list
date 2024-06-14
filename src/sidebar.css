@@ -36,8 +36,15 @@
     align-items: center;
 }
 
-.sidebar-content section > button:hover {
+.sidebar-content section > button:hover, .sidebar-content section > button:hover svg {
     background: var(--gray-highlight);
+    fill: var(--highlight-dark);
+}
+
+button.selected, button.selected svg {
+    background: var(--selected) !important;
+    fill: var(--highlight-light) !important;
+    color: var(--highlight-light) !important;
 }
 
 .sidebar-content > div {
