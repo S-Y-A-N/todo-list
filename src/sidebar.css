@@ -2,7 +2,7 @@
 .sidebar {
     background-color: var(--sidebar);
     height: 100vh;
-    min-width: 280px;
+    width: 280px;
 }
 
 .sidebar .logo > div {
@@ -88,4 +88,15 @@ input ~ aside {
 
 input:checked ~ aside {
     margin-left: 0;
+}
+
+@media (max-width: 750px) {
+    .sidebar {
+        width: 220px;
+        position: fixed;
+    }
+
+    input ~ aside {
+        margin-left: -220px;
+    }
 }
