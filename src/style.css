@@ -4,8 +4,8 @@
 :root {
     --back-bg: rgb(255, 225, 225);
     --task-container: rgb(255, 200, 200);
-    --highlight-light: rgb(255, 150, 150);
-    --highlight-dark: rgb(255, 80, 80);
+    --highlight-normal: rgb(255, 150, 150);
+    --highlight-invert: rgb(255, 80, 80);
     --active-light: rgb(255, 220, 220);
     --gray: rgb(175, 175, 175);
     --dark-gray: rgb(54, 54, 54);
@@ -16,14 +16,15 @@
 
     --sidebar: rgb(241, 241, 241);
     --dialog: rgb(255, 255, 255);
+    --selected: rgb(255, 240, 240);
 }
 
 :root.dark {
     color-scheme: dark;
     --back-bg: rgb(30, 30, 30);
     --task-container: rgb(38, 38, 38);
-    --highlight-light: #c4b5fd;
-    --highlight-dark: #8b5cf6;
+    --highlight-normal: #c4b5fd;
+    --highlight-invert: #8b5cf6;
     --active-light: #d7c6ff;
     --gray: rgb(155, 155, 155);
     --dark-gray: rgb(240, 240, 240);
@@ -33,7 +34,7 @@
 
     --sidebar: rgb(38, 38, 38); /* consider: rgb(38, 38, 38) */
     --dialog: rgb(32, 32, 32);
-    --selected: rgb(76, 45, 95);
+    --selected: rgb(55, 55, 55);
 }
 
 * {
@@ -45,6 +46,10 @@ body {
     background-color: var(--back-bg);
     margin: 0;
     min-width: fit-content;
+}
+
+::selection {
+    background: var();
 }
 
 .hidden {
@@ -60,12 +65,12 @@ button:hover, .check-circle:hover {
 }
 
 svg {
-    fill: var(--highlight-light);
+    fill: var(--highlight-normal);
     margin-right: 8px;
 }
 
 svg:hover {
-    fill: var(--highlight-dark);
+    fill: var(--highlight-invert);
     cursor: pointer;
 }
 
@@ -102,8 +107,8 @@ header {
 }
 
 h1 > span {
-    color: var(--highlight-light);
-    text-decoration: underline wavy 2px var(--highlight-dark);
+    color: var(--highlight-invert);
+    text-decoration: underline wavy 2px var(--highlight-normal);
 }
 
 header > .nav {
@@ -126,7 +131,7 @@ header > .nav {
 
 #projectBtn:hover {
     cursor: pointer;
-    color: var(--highlight-dark);
+    color: var(--highlight-invert);
 }
 
 #themeBtn {
@@ -136,14 +141,14 @@ header > .nav {
 }
 
 #themeBtn > svg {
-    fill: var(--highlight-light);
+    fill: var(--highlight-normal);
     width: 1.5rem;
     height: 1.5rem;
 }
 
 #themeBtn > svg:hover {
     cursor: pointer;
-    fill: var(--highlight-dark);
+    fill: var(--highlight-invert);
     width: 1.5rem;
     height: 1.5rem;
 }
@@ -151,10 +156,11 @@ header > .nav {
 /* Main */
 
 #taskContainer {
-    /* background-color: var(--task-container); */
-    margin: 0 5rem;
+    /* background0em-color: var(--task-container); */
+    margin: 0 auto;
     padding: 2rem;
     border-radius: 1rem;
+    max-width: 800px;
 
     display: flex;
     flex-direction: column;
@@ -218,7 +224,7 @@ header > .nav {
 
 .check-circle-done {
     background-color: var(--active-light) !important;
-    border-color: var(--highlight-dark);
+    border-color: var(--highlight-invert);
 }
 
 .edit-task-button {
@@ -227,4 +233,16 @@ header > .nav {
 
 .visible {
     opacity: 1;
+}
+
+@media (max-width: 850px) {
+    #taskContainer {
+        margin: 0 2rem;
+    }
+}
+
+@media (max-width: 450px) {
+    #taskContainer {
+        margin: 0;
+    }
 }
