@@ -1,17 +1,19 @@
-import { TODO, Project } from "./todo";
+import { Task, Project } from "./todo";
 import { DOM } from "./dom";
 
 import './style.css';
 import './sidebar.css';
 import './dialog.css'
 
-Project.create('Inbox');
-Project.create('Todo app');
-DOM.addProject(Project.get(0));
-DOM.addProject(Project.get(1));
+const p0 = Project.create('Inbox');
+const p1 = Project.create('Grocery');
+const p2 = Project.create('Work');
+DOM.addProject(p0);
+DOM.addProject(p1);
+DOM.addProject(p2);
 
-let t1 = TODO.create('Work on this shitty todo app :(', "", Project.get(0), 0, new Date().toLocaleDateString(), false);
-DOM.addTodoItem(t1);
+let t0 = Task.create('Work on this shitty todo app :(', "", p0, 0, new Date().toLocaleDateString(), false);
+DOM.addTask(t0);
 
 
 
@@ -47,13 +49,20 @@ function change_page(e) {
     clickedTab.classList.add('selected')
 }
 
-function check_circle_done(e) {
-    e.target.classList.toggle('check-circle-done')
+function check_circle_done() {
+    this.classList.toggle('check-circle-done');
+    const taskTitle = this.nextSibling;
+    if (this.classList.contains('check-circle-done')) {
+        taskTitle.style.textDecoration = 'line-through';
+    } else {
+        taskTitle.style.textDecoration = 'none';
+    }
+
 }
 
 function task_hover(e) {
     const editBtn = this.getElementsByClassName('edit-task-button')[0];
-    if(e.type === "mouseenter") editBtn.classList.add('visible')
+    if (e.type === "mouseenter") editBtn.classList.add('visible')
     else editBtn.classList.remove('visible')
 }
 
@@ -67,11 +76,11 @@ document.getElementsByClassName('check-circle')[0].addEventListener('click', che
 
 // on task hover
 const tasks = document.getElementsByClassName('task');
-
 Array.from(tasks).forEach(task => {
     task.addEventListener('mouseenter', task_hover);
     task.addEventListener('mouseleave', task_hover);
-})
+    console.log(tasks)
+});
 
 // page changing via sidebar tabs
 const pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
