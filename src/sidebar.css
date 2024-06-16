@@ -16,11 +16,15 @@
 
 #dialogBtn button {
     font-weight: bold;
-    color: var(--highlight-dark);
+    color: var(--highlight-invert);
 }
 
 #dialogBtn svg {
-    fill: var(--highlight-dark);
+    fill: var(--highlight-invert);
+}
+
+.sidebar-content section {
+    margin-bottom: 3px;
 }
 
 .sidebar-content section > button {
@@ -38,13 +42,17 @@
 
 .sidebar-content section > button:hover, .sidebar-content section > button:hover svg {
     background: var(--gray-highlight);
-    fill: var(--highlight-dark);
+    fill: var(--highlight-invert);
 }
 
 button.selected, button.selected svg {
     background: var(--selected) !important;
-    fill: var(--highlight-light) !important;
-    color: var(--highlight-light) !important;
+    color: var(--highlight-invert) !important;
+    fill: var(--highlight-invert) !important;
+}
+
+button.selected {
+    box-shadow: inset 0px 0px 0px 1px var(--highlight-invert);
 }
 
 .sidebar-content > div {
