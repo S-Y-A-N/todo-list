@@ -33,7 +33,6 @@ dialog textarea {
 #name {
     font-size: 1.3rem;
     font-weight: bold;
-
 }
 
 #desc {
@@ -62,7 +61,7 @@ select option {
 }
 
 #submitTask {
-    background: var(--highlight-dark);
+    background: var(--highlight-invert);
 }
 
 #closeDialogBtn {
