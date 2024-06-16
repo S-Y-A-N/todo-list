@@ -83,21 +83,19 @@
     
                 <dialog id="addDialog">
                     
-                    <form method="dialog">
+                    <form id="taskForm" action="#" method="dialog">
                         <textarea type="text" id="name" placeholder="Task name" required></textarea>
-                        <textarea type="text" id="desc" placeholder="Description" required></textarea>
+                        <textarea type="text" id="desc" placeholder="Description"></textarea>
     
                         <div class="task-controls">
-                            <input type="date" id="date" required placeholder="Due Date">
+                            <input type="date" id="date" placeholder="Due Date">
                             <select id="priority">
                                 <option value="0">Priority</option>
                                 <option value="1">Low</option>
                                 <option value="2">Important</option>
                                 <option value="3">Urgent</option>
                             </select>
-                            <select id="project">
-                                
-                            </select>
+                            <select id="project"></select>
                         </div>
                         <div class="button-container">
                             <button class="button" id="closeDialogBtn">Cancel</button>
