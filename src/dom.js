@@ -1,10 +1,11 @@
-import {TODO,Project} from "./todo";
+import { Task, LocalStorage, Project } from "./todo";
+import { format } from "date-fns";
 
 export const DOM = (function () {
     const taskList = document.getElementById('taskList');
     const noTasksMsg = taskList.getElementsByTagName('p')[0];
 
-    const addTodoItem = (todo) => {
+    const addTask = (task) => {
         handleNoTasks();
         
         // task container
@@ -21,9 +22,9 @@ export const DOM = (function () {
         const taskTitle = document.createElement('span');
         const taskDate = document.createElement('span');
 
-        taskProject.textContent = todo.project.name;
-        taskTitle.textContent = todo.name;
-        taskDate.textContent = todo.dueDate;
+        taskProject.textContent = LocalStorage.get(task.project.key).name;
+        taskTitle.textContent = task.name;
+        if (task.dueDate !== "") taskDate.textContent = format(task.dueDate, "d MMM yyyy");
 
         taskProject.classList.add('task-project');
         taskTitle.classList.add('task-title');
@@ -44,7 +45,7 @@ export const DOM = (function () {
         taskLv1.appendChild(check_circle);
         taskLv1.appendChild(taskTitle);
         taskLv3.appendChild(taskProject);
-        // taskLv1.appendChild(taskDate);
+        taskLv1.appendChild(taskDate);
         taskLv1.appendChild(more_vert);
 
         // appending levels to task container
@@ -56,6 +57,7 @@ export const DOM = (function () {
         taskList.appendChild(taskDiv);
         taskList.appendChild(line);
     }
+
     const isTaskListEmpty = () => TODO.isTaskListEmpty();
 
     const handleNoTasks = () => {
@@ -65,22 +67,22 @@ export const DOM = (function () {
             noTasksMsg.classList.remove('hidden');
     }
 
-    const extractTodoInfo = () => {
+    const extractTaskInfo = () => {
         const name = document.getElementById('name').value;
         const desc = document.getElementById('desc').value;
-        // const project = document.getElementById('project').value;
         const date = document.getElementById('date').value;
         const priority = document.getElementById('priority').value;
+        const projecSelect = document.getElementById('project');
+        const projectKey = projecSelect.options[projecSelect.selectedIndex].getAttribute('data-key');
+        const project = LocalStorage.get(projectKey);
 
-        const todo = TODO.create(name, desc, Project.get(0), priority, date, false);
-
-        addTodoItem(todo);
-
+        const task = Task.create(name, desc, project, priority, date, false);
+        addTask(task);
         closeDialog();
     }
 
     const clearInputs = () => {
-        const inputs = document.querySelectorAll('input');
+        const inputs = Array.from(document.querySelectorAll('input')).concat(Array.from(document.querySelectorAll('textarea')))
         inputs.forEach(input => input.value = "");
     }
 
@@ -96,18 +98,20 @@ export const DOM = (function () {
     const addProjectToDialog = (project) => {
         const select = document.getElementById('project');
         const option = document.createElement('option');
+        option.setAttribute('data-key', project.key);
         option.textContent = project.name;
         select.appendChild(option);
     }
 
+    // TODO!
     const addProjectToSidebar = () => {
         const projectDiv = document.createElement('div')
     }
 
     document.getElementById('dialogBtn').addEventListener('click', () => addDialog.showModal());
     document.getElementById('closeDialogBtn').addEventListener('click', closeDialog);
-    document.getElementById('submitTask').addEventListener('click', extractTodoInfo);
+    document.getElementById('taskForm').addEventListener('submit', extractTaskInfo);
 
-    return { addTodoItem, addProject }
+    return { addTask, addProject }
 
 })();

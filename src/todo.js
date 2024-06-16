@@ -1,14 +1,15 @@
-export const TODO = (function () {
+let t = 0; // for tasks keys
+let p = 0; // for projects keys
 
-    function create(name, desc = "", project = Project.get(0), priority = 0, dueDate = "", complete = false) {
-        const task = { name, desc, project, priority, dueDate, complete };
-    
-        addToProject(task.project, task)
-    
+export const Task = (function () {
+
+    function create(name, desc = "", project, priority = 0, dueDate = "", complete = false) {
+        const key = `t${t}`;
+        const task = { key, name, desc, project, priority, dueDate, complete };
+        LocalStorage.store(key, task);
+        t++;
         return task;
     }
-
-    const addToProject = (project, task) => project.list.push(task);
 
     const toggleComplete = (task) => task.complete = !task.complete;
 
@@ -16,17 +17,27 @@ export const TODO = (function () {
 })();
 
 export const Project = (function () {
-    let projects = [];
-
 
     function create(name) {
-        let list = [];
-        const project = { name, list }
-        projects.push(project);
+        const key = `p${p}`;
+        const project = { key, name }
+        LocalStorage.store(key, project);
+        p++;
         return project;
     }
 
-    const get = (index) => projects[index];
+    return { create }
+})();
 
-    return { create, get }
+export const LocalStorage = (function () {
+
+    const store = (key, item) => {
+        localStorage.setItem(key, JSON.stringify(item));
+    }
+
+    const get = (key) => {
+        return JSON.parse(localStorage.getItem(key))
+    }
+
+    return { store, get }
 })();
