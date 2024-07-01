@@ -60,7 +60,7 @@ select option {
     font-weight: bold;
 }
 
-#submitTask {
+#submitTodo {
     background: var(--highlight-invert);
 }
 
@@ -69,11 +69,11 @@ select option {
     background: var(--gray-highlight);
 }
 
-.task-controls {
+.todo-controls {
     margin: 4px 0;
 }
 
-.task-controls >  * {
+.todo-controls >  * {
     background: none;
     border: none;
     outline: none;

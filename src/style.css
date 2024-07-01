@@ -3,7 +3,7 @@
 
 :root {
     --back-bg: rgb(255, 225, 225);
-    --task-container: rgb(255, 200, 200);
+    --todo-container: rgb(255, 200, 200);
     --highlight-normal: rgb(255, 150, 150);
     --highlight-invert: rgb(255, 80, 80);
     --active-light: rgb(255, 220, 220);
@@ -22,7 +22,7 @@
 :root.dark {
     color-scheme: dark;
     --back-bg: rgb(30, 30, 30);
-    --task-container: rgb(38, 38, 38);
+    --todo-container: rgb(38, 38, 38);
     --highlight-normal: #c4b5fd;
     --highlight-invert: #8b5cf6;
     --active-light: #d7c6ff;
@@ -155,8 +155,8 @@ header > .nav {
 
 /* Main */
 
-#taskContainer {
-    /* background0em-color: var(--task-container); */
+#todoContainer {
+    /* background-color: var(--todo-container); */
     margin: 0 auto;
     padding: 2rem;
     border-radius: 1rem;
@@ -167,38 +167,42 @@ header > .nav {
     gap: 2rem;
 }
 
-#taskList {
+#todoList {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.task {
+#todoList > p {
+    text-align: center;
+}
+
+.todo {
     padding: 1rem;
 }
 
-.task:hover {
-    background-color: var(--task-container);
+.todo:hover {
+    background-color: var(--todo-container);
     border-radius: 1rem;
 }
 
-.task > div {
+.todo > div {
     display: flex;
     align-items: center;
 }
 
-.task > div:last-child {
+.todo > div:last-child {
     justify-content: flex-end;
 }
 
-.task-project {
+.todo-project {
     margin-right: 1rem;
     margin-top: 1rem;
     color: var(--dark-gray);
     font-weight: 300;
 }
 
-.task-title { 
+.todo-title { 
     flex: 1;
 }
 
@@ -206,7 +210,7 @@ header > .nav {
     margin: 0;
 }
 
-.task-date {
+.todo-date {
     font-family: var(--date-font);
 }
 
@@ -227,7 +231,7 @@ header > .nav {
     border-color: var(--highlight-invert);
 }
 
-.edit-task-button {
+.edit-todo-button {
     opacity: 0;
 }
 
@@ -236,13 +240,13 @@ header > .nav {
 }
 
 @media (max-width: 850px) {
-    #taskContainer {
+    #todoContainer {
         margin: 0 2rem;
     }
 }
 
 @media (max-width: 450px) {
-    #taskContainer {
+    #todoContainer {
         margin: 0;
     }
 }
