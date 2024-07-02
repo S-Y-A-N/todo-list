@@ -29,21 +29,21 @@ export default class TodoController {
         const defaultTodos = [
             {
                 name: 'Cleanup',
-                description: 'Deep clean bedroom, living room, bathroom, and kitchen.',
+                desc: 'Deep clean bedroom, living room, bathroom, and kitchen.',
                 project: 'Chores',
                 priority: 'Low',
                 dueDate: makeFutureDate(7),
             },
             {
                 name: 'Medical Checkup',
-                description: 'Go to my scheduled appointment for examination.',
+                desc: 'Go to my scheduled appointment for examination.',
                 project: 'Inbox',
                 priority: 'Urgent',
                 dueDate: makeFutureDate(3),
             },
             {
-                name: 'Study differential equation',
-                description: 'Continue through the textbook (until page 130).',
+                name: 'Study Differential Equations',
+                desc: 'Continue through the textbook until page 130.',
                 project: 'Math Study',
                 priority: 'Important',
                 dueDate: makeFutureDate(),
