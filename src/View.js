@@ -46,7 +46,7 @@ export default class TodoView {
 
         this.dialogBtn.addEventListener('click', () => this.handleOpenDialog(this.addTodoDialog));
         this.closeDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addTodoDialog));
-        this.todoForm.addEventListener('submit', this.handleSubmitTodo)
+        this.todoForm.addEventListener('submit', () => this.handleSubmitTodo())
 
         this.nameInput.addEventListener('input', e => this.autoGrowInput(e.target))
         this.descInput.addEventListener('input', e => this.autoGrowInput(e.target))
@@ -58,18 +58,22 @@ export default class TodoView {
 
     handleSubmitTodo() {
         const todoData = this.getTodoFormInputs();
-        console.log(todoData)
         this.controller.controlCreateTodo(todoData);
         this.todoForm.reset();
     }
 
     getTodoFormInputs() {
+        const nameInput = document.getElementById('name');
+        const descInput = document.getElementById('desc');
+        const projectInput = document.getElementById('project');
+        const priorityInput = document.getElementById('priority');
+        const dateInput = document.getElementById('date');
         const todoData = {
-            title: this.nameInput.value,
-            description: this.descInput.value,
-            dueDate: this.dateInput.value,
-            priority: this.priorityInput.value,
-            project: this.projectInput.value,
+            name: nameInput.value,
+            desc: descInput.value,
+            dueDate: dateInput.value,
+            priority: priorityInput.value,
+            project: projectInput.value,
         }
 
         return todoData;
@@ -103,16 +107,19 @@ export default class TodoView {
 
         // todo info
         const todoTitle = document.createElement('span');
+        const todoDesc = document.createElement('span');
         const todoProject = document.createElement('span');
         const todoDate = document.createElement('span');
 
         todoTitle.textContent = todo.name;
-        todoProject.textContent = todo.project;
+        todoDesc.textContent = todo.desc;
+        todoProject.textContent = `# ${todo.project}`;
         if (isDate(todo.dueDate)) todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
 
 
-        todoProject.classList.add('todo-project');
         todoTitle.classList.add('todo-title');
+        todoDesc.classList.add('todo-desc');
+        todoProject.classList.add('todo-project');
         todoDate.classList.add('todo-date');
 
         // extra elements
@@ -129,9 +136,10 @@ export default class TodoView {
         // appending to todo levels
         todoLv1.appendChild(check_circle);
         todoLv1.appendChild(todoTitle);
-        todoLv3.appendChild(todoProject);
         todoLv1.appendChild(todoDate);
-        todoLv1.appendChild(more_vert);
+        // todoLv1.appendChild(more_vert);
+        todoLv2.appendChild(todoDesc);
+        todoLv3.appendChild(todoProject);
 
         // appending levels to todo container
         todoDiv.appendChild(todoLv1)
