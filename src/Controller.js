@@ -12,8 +12,8 @@ export default class TodoController {
 
     init() {
         this.loadTodos();
-        this.displayTodos();
-        this.displayProjects();
+        this.controlTodosDisplay();
+        this.controlProjectDisplay();
     }
 
     loadTodos() {
@@ -28,21 +28,21 @@ export default class TodoController {
     initDefaultTodos() {
         const defaultTodos = [
             {
-                title: 'Cleanup',
+                name: 'Cleanup',
                 description: 'Deep clean bedroom, living room, bathroom, and kitchen.',
                 project: 'Chores',
                 priority: 'Low',
                 dueDate: makeFutureDate(7),
             },
             {
-                title: 'Medical Checkup',
+                name: 'Medical Checkup',
                 description: 'Go to my scheduled appointment for examination.',
                 project: 'Inbox',
                 priority: 'Urgent',
                 dueDate: makeFutureDate(3),
             },
             {
-                title: 'Study differential equation',
+                name: 'Study differential equation',
                 description: 'Continue through the textbook (until page 130).',
                 project: 'Math Study',
                 priority: 'Important',
