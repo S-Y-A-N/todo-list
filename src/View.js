@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { isDate } from "./utility";
 
 //     const addProject = (project) => {
 //         addProjectToDialog(project)
@@ -45,7 +46,7 @@ export default class TodoView {
 
         this.dialogBtn.addEventListener('click', () => this.handleOpenDialog(this.addTodoDialog));
         this.closeDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addTodoDialog));
-        this.todoForm.addEventListener('submit', this.handleSubmitTodo())
+        this.todoForm.addEventListener('submit', this.handleSubmitTodo)
 
         this.nameInput.addEventListener('input', e => this.autoGrowInput(e.target))
         this.descInput.addEventListener('input', e => this.autoGrowInput(e.target))
@@ -88,24 +89,27 @@ export default class TodoView {
 
     handleAddTodo(todo) {
         
-        
         // todo container
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
 
-        // todo container levels
+        // todo container levels:
+        // 1. title + controls
         const todoLv1 = document.createElement('div');
+        // 2. description
         const todoLv2 = document.createElement('div');
+        // 3. project
         const todoLv3 = document.createElement('div');
 
         // todo info
-        const todoProject = document.createElement('span');
         const todoTitle = document.createElement('span');
+        const todoProject = document.createElement('span');
         const todoDate = document.createElement('span');
 
-        todoProject.textContent = 'placeholder';
         todoTitle.textContent = todo.name;
-        if (todo.dueDate !== "") todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
+        todoProject.textContent = todo.project;
+        if (isDate(todo.dueDate)) todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
+
 
         todoProject.classList.add('todo-project');
         todoTitle.classList.add('todo-title');
@@ -137,6 +141,10 @@ export default class TodoView {
         // appending todo container to todo list
         this.todoList.appendChild(todoDiv);
         this.todoList.appendChild(line);
+    }
+
+    displayProjects() {
+
     }
 
     handleOpenDialog(dialog) {
