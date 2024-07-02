@@ -196,14 +196,19 @@ header > .nav {
 }
 
 .todo-project {
-    margin-right: 1rem;
     margin-top: 1rem;
     color: var(--dark-gray);
-    font-weight: 300;
+    font-weight: 200;
 }
 
 .todo-title { 
     flex: 1;
+}
+
+.todo-desc {
+    font-weight: 300;
+    margin-top: .5rem;
+    margin-left: 2.1rem;
 }
 
 .priority-title {
@@ -212,6 +217,7 @@ header > .nav {
 
 .todo-date {
     font-family: var(--date-font);
+    font-weight: 100;
 }
 
 .check-circle {
@@ -231,9 +237,9 @@ header > .nav {
     border-color: var(--highlight-invert);
 }
 
-.edit-todo-button {
+/* .edit-todo-button {
     opacity: 0;
-}
+} */
 
 .visible {
     opacity: 1;
