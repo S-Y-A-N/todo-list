@@ -8,6 +8,7 @@ import TodoView from './View';
 import TodoController from './Controller';
 
 document.addEventListener('DOMContentLoaded', () => {
+    localStorage.clear()
     const todoLogic = new TodoLogic();
     const projectLogic = new ProjectLogic();
     const view = new TodoView();
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-// Visual DOM stuff
+// Visual DOM stuff / may be discarded
 
 // function check_circle_done() {
 //     this.classList.toggle('check-circle-done');
