@@ -1,6 +1,6 @@
 export default class ProjectLogic {
     constructor() {
-        this.projectList = ['The Odin Project', 'School', 'Housework'];
+        this.projectList = ['Inbox', 'Chores', 'Math Study', 'Workout'];
     }
 
     getProjects() {
