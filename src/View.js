@@ -1,16 +1,12 @@
-import { format } from "date-fns";
-import { isDate } from "./utility";
+import { format, isThisWeek, isToday, isTomorrow } from "date-fns";
+import { isDate, isWithinOneWeek, makeNewDate } from "./utility";
 
 //     const addProject = (project) => {
 //         addProjectToDialog(project)
 //     }
 
 //     const addProjectToDialog = (project) => {
-//         const select = document.getElementById('project');
-//         const option = document.createElement('option');
-//         option.setAttribute('data-key', project.key);
-//         option.textContent = project.name;
-//         select.appendChild(option);
+
 //     }
 
 //     // TODO!
@@ -22,7 +18,6 @@ import { isDate } from "./utility";
 export default class TodoView {
     constructor() {
         this.todoList = document.getElementById('todoList');
-        this.noTodosMsg = this.todoList.getElementsByTagName('p')[0];
 
         this.dialogBtn = document.getElementById('dialogBtn');
         this.closeDialogBtn = document.getElementById('closeDialogBtn');
@@ -31,6 +26,9 @@ export default class TodoView {
 
         this.themeBtn = document.getElementById('themeBtn');
         this.pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
+
+        this.defaultTab = document.getElementById('defaultTab');
+        this.styleSelectedTab(this.defaultTab);
 
         this.nameInput = document.getElementById('name');
         this.descInput = document.getElementById('desc');
@@ -80,19 +78,20 @@ export default class TodoView {
     }
 
     displayTodoItems(todoList) {
-        
-        // toggles hidden class on "no todos message"
+        this.todoList.innerHTML = '';
+
+        // if todoList is empty, display no todos message
         if (todoList.length === 0) {
-            this.noTodosMsg.classList.remove('hidden')
-        } else {
-            this.noTodosMsg.classList.add('hidden')
+            const noTodosMsg = document.createElement('p');
+            noTodosMsg.textContent = 'No todos left in sight!';
+            this.todoList.appendChild(noTodosMsg);
         }
 
         todoList.forEach(todo => this.handleAddTodo(todo))
     }
 
     handleAddTodo(todo) {
-        
+
         // todo container
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
@@ -152,7 +151,19 @@ export default class TodoView {
     }
 
     displayProjects() {
+        const projectDropdown = document.getElementById('project');
 
+        // while dropdown has 2 children (1st child = inbox)
+        while (projectDropdown.children[1]) {
+            projectDropdown.removeChild(projectDropdown.children[1]);
+        }
+
+        const projectList = this.controller.controlGetProjects();
+        projectList.forEach((project) => {
+            const option = document.createElement('option');
+            option.textContent = project;
+            projectDropdown.appendChild(option);
+        });
     }
 
     handleOpenDialog(dialog) {
@@ -170,6 +181,12 @@ export default class TodoView {
         document.getElementById('darkModeIcon').classList.toggle('hidden');
     }
 
+    styleSelectedTab(selectedTab) {
+        selectedTab.classList.add('selected');
+        const title = document.getElementById('pageTitle');
+        title.textContent = selectedTab.textContent;
+    }
+
     handleChangePage(e) {
         Array.from(this.pageTabs).forEach(button => {
             button.classList.remove('selected');
@@ -178,11 +195,36 @@ export default class TodoView {
         let clickedTab = e.target;
         if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
         else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
-    
-        const title = document.getElementById('pageTitle');
-        title.textContent = e.target.textContent;
-        
-        clickedTab.classList.add('selected')
+
+        this.styleSelectedTab(clickedTab)
+
+        let filteredTodos = [];
+        const todoList = this.controller.controlGetTodos();
+        switch (clickedTab.textContent) {
+            case 'Inbox':
+                filteredTodos = todoList.filter((todo) => todo.project.toLowerCase() === 'Inbox'.toLowerCase());
+                this.displayTodoItems(filteredTodos);
+                break;
+            
+            case 'Today':
+                filteredTodos = todoList.filter((todo) => isToday(todo.dueDate));
+                this.displayTodoItems(filteredTodos);
+                break;
+
+            case 'Tommorow':
+                filteredTodos = todoList.filter((todo) => isTomorrow(todo.dueDate));
+                this.displayTodoItems(filteredTodos);
+                break;
+
+            case 'Week':
+                filteredTodos = todoList.filter((todo) => isWithinOneWeek(todo.dueDate, makeNewDate()));
+                this.displayTodoItems(filteredTodos);
+                break;
+
+            case 'All':
+                this.displayTodoItems(todoList);
+                break;
+        }
     }
 
     clearInputs(parentElement) {
