@@ -8,7 +8,7 @@ import TodoView from './View';
 import TodoController from './Controller';
 
 document.addEventListener('DOMContentLoaded', () => {
-    localStorage.clear()
+    localStorage.clear();
     const todoLogic = new TodoLogic();
     const projectLogic = new ProjectLogic();
     const view = new TodoView();
