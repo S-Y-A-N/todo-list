@@ -1,7 +1,7 @@
 "use strict";
 (self["webpackChunktodo_list"] = self["webpackChunktodo_list"] || []).push([[57],{
 
-/***/ 764:
+/***/ 611:
 /***/ (() => {
 
 
@@ -4566,6 +4566,63 @@ function startOfDay(date) {
 // Fallback for modularized imports:
 /* harmony default export */ const date_fns_startOfDay = ((/* unused pure expression or super */ null && (startOfDay)));
 
+;// CONCATENATED MODULE: ./node_modules/date-fns/isWithinInterval.mjs
+
+
+/**
+ * @name isWithinInterval
+ * @category Interval Helpers
+ * @summary Is the given date within the interval?
+ *
+ * @description
+ * Is the given date within the interval? (Including start and end.)
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to check
+ * @param interval - The interval to check
+ *
+ * @returns The date is within the interval
+ *
+ * @example
+ * // For the date within the interval:
+ * isWithinInterval(new Date(2014, 0, 3), {
+ *   start: new Date(2014, 0, 1),
+ *   end: new Date(2014, 0, 7)
+ * })
+ * //=> true
+ *
+ * @example
+ * // For the date outside of the interval:
+ * isWithinInterval(new Date(2014, 0, 10), {
+ *   start: new Date(2014, 0, 1),
+ *   end: new Date(2014, 0, 7)
+ * })
+ * //=> false
+ *
+ * @example
+ * // For date equal to interval start:
+ * isWithinInterval(date, { start, end: date })
+ * // => true
+ *
+ * @example
+ * // For date equal to interval end:
+ * isWithinInterval(date, { start: date, end })
+ * // => true
+ */
+function isWithinInterval(date, interval) {
+  const time = +toDate(date);
+  const [startTime, endTime] = [
+    +toDate(interval.start),
+    +toDate(interval.end),
+  ].sort((a, b) => a - b);
+
+  return time >= startTime && time <= endTime;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isWithinInterval = ((/* unused pure expression or super */ null && (isWithinInterval)));
+
 ;// CONCATENATED MODULE: ./src/utility.js
 
 
@@ -4575,14 +4632,24 @@ function generateUniqueId() {
 }
 
 function isDate(date) {
+    // console.log(`isDate: ${date instanceof Date && !isNaN(date)}`)
     return date instanceof Date && !isNaN(date);
 }
 
 function makeNewDate(dateString) {
     if(dateString) {
-        const parsedDate = parse(dateString, 'd MMM yyyy', new Date());
-        return startOfDay(parsedDate);
+        if (dateString.length === 10) {
+            console.log('calander date!')
+            const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+            return startOfDay(parsedDate);
+        } else {
+            console.log(dateString)
+            console.log('ugh? some date string')
+            return startOfDay(new Date(dateString));
+        }
     } else {
+        console.log(dateString)
+        console.log('no date string!')
         return startOfDay(new Date());
     }
 }
@@ -4591,6 +4658,13 @@ function makeFutureDate(daysToAdd) {
     const currentDate = makeNewDate();
     const futureDate = addDays(currentDate, daysToAdd);
     return futureDate;
+}
+
+function isWithinOneWeek(dueDate, currentDate) {
+    return isWithinInterval(dueDate, {
+        start: currentDate,
+        end: makeFutureDate(7),
+    });
 }
 ;// CONCATENATED MODULE: ./src/TodoLogic.js
 
@@ -4609,7 +4683,7 @@ class TodoItem {
         this.desc = desc;
         this.project = project;
         this.priority = priority;
-        this.dueDate = isDate(dueDate) ? dueDate : "";
+        this.dueDate = isDate(dueDate) ? dueDate : makeNewDate(dueDate);
         this.complete = complete || false;
     }
 
@@ -4635,11 +4709,47 @@ class TodoLogic {
         return this.todoList.length === 0;
     }
 
-    createTodo(data) {
-        const newTodo = new TodoItem(data)
+    createTodo(todoData) {
+        const newTodo = new TodoItem(todoData)
         this.todoList.push(newTodo);
         this.saveToLocal();
         return newTodo;
+    }
+
+    deleteTodo(todoId) {
+        const index = this.todoList.findIndex((todo) => todo.id === todoId);
+        if (index !== -1) {
+            this.todoList.splice(index, 1);
+            this.saveToLocal();
+        }
+    }
+
+    getTodoById(todoId) {
+        const todo = this.todoList.find((todo) => todo.id === todoId)
+        if (todo) {
+            return todo;
+        }
+    }
+
+    updateTodo(todoId, todoData) {
+        const todo = this.todoList.find((todo) => todo.id === todoId);
+        if (todo) {
+            todo.name = todoData.name;
+            todo.desc = todoData.desc;
+            todo.project = todoData.project;
+            todo.priority = todoData.priority;
+            todo.dueDate = makeNewDate(todoData.dueDate);
+
+            this.saveToLocal();
+        }
+    }
+
+    todoItemToggleComplete(todoId) {
+        const todo = this.todoList.find((todo) => todo.id === todoId);
+        if (todo) {
+          todo.toggleComplete();
+          this.saveToLocal();
+        }
     }
 
     saveToLocal() {
@@ -4649,7 +4759,7 @@ class TodoLogic {
 ;// CONCATENATED MODULE: ./src/ProjectLogic.js
 class ProjectLogic {
     constructor() {
-        this.projectList = ['The Odin Project', 'School', 'Housework'];
+        this.projectList = ['Inbox', 'Chores', 'Math Study', 'Workout'];
     }
 
     getProjects() {
@@ -6200,6 +6310,152 @@ function format_cleanEscapedString(input) {
 // Fallback for modularized imports:
 /* harmony default export */ const date_fns_format = ((/* unused pure expression or super */ null && (format)));
 
+;// CONCATENATED MODULE: ./node_modules/date-fns/constructNow.mjs
+
+
+/**
+ * @name constructNow
+ * @category Generic Helpers
+ * @summary Constructs a new current date using the passed value constructor.
+ * @pure false
+ *
+ * @description
+ * The function constructs a new current date using the constructor from
+ * the reference date. It helps to build generic functions that accept date
+ * extensions and use the current date.
+ *
+ * It defaults to `Date` if the passed reference date is a number or a string.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The reference date to take constructor from
+ *
+ * @returns Current date initialized using the given date constructor
+ *
+ * @example
+ * import { constructNow, isSameDay } from 'date-fns'
+ *
+ * function isToday<DateType extends Date>(
+ *   date: DateType | number | string,
+ * ): boolean {
+ *   // If we were to use `new Date()` directly, the function would  behave
+ *   // differently in different timezones and return false for the same date.
+ *   return isSameDay(date, constructNow(date));
+ * }
+ */
+function constructNow(date) {
+  return constructFrom(date, Date.now());
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_constructNow = ((/* unused pure expression or super */ null && (constructNow)));
+
+;// CONCATENATED MODULE: ./node_modules/date-fns/isSameDay.mjs
+
+
+/**
+ * @name isSameDay
+ * @category Day Helpers
+ * @summary Are the given dates in the same day (and year and month)?
+ *
+ * @description
+ * Are the given dates in the same day (and year and month)?
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param dateLeft - The first date to check
+ * @param dateRight - The second date to check
+
+ * @returns The dates are in the same day (and year and month)
+ *
+ * @example
+ * // Are 4 September 06:00:00 and 4 September 18:00:00 in the same day?
+ * const result = isSameDay(new Date(2014, 8, 4, 6, 0), new Date(2014, 8, 4, 18, 0))
+ * //=> true
+ *
+ * @example
+ * // Are 4 September and 4 October in the same day?
+ * const result = isSameDay(new Date(2014, 8, 4), new Date(2014, 9, 4))
+ * //=> false
+ *
+ * @example
+ * // Are 4 September, 2014 and 4 September, 2015 in the same day?
+ * const result = isSameDay(new Date(2014, 8, 4), new Date(2015, 8, 4))
+ * //=> false
+ */
+function isSameDay(dateLeft, dateRight) {
+  const dateLeftStartOfDay = startOfDay(dateLeft);
+  const dateRightStartOfDay = startOfDay(dateRight);
+
+  return +dateLeftStartOfDay === +dateRightStartOfDay;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isSameDay = ((/* unused pure expression or super */ null && (isSameDay)));
+
+;// CONCATENATED MODULE: ./node_modules/date-fns/isToday.mjs
+
+
+
+/**
+ * @name isToday
+ * @category Day Helpers
+ * @summary Is the given date today?
+ * @pure false
+ *
+ * @description
+ * Is the given date today?
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to check
+ *
+ * @returns The date is today
+ *
+ * @example
+ * // If today is 6 October 2014, is 6 October 14:00:00 today?
+ * const result = isToday(new Date(2014, 9, 6, 14, 0))
+ * //=> true
+ */
+function isToday(date) {
+  return isSameDay(date, constructNow(date));
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isToday = ((/* unused pure expression or super */ null && (isToday)));
+
+;// CONCATENATED MODULE: ./node_modules/date-fns/isTomorrow.mjs
+
+
+
+
+/**
+ * @name isTomorrow
+ * @category Day Helpers
+ * @summary Is the given date tomorrow?
+ * @pure false
+ *
+ * @description
+ * Is the given date tomorrow?
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to check
+ *
+ * @returns The date is tomorrow
+ *
+ * @example
+ * // If today is 6 October 2014, is 7 October 14:00:00 tomorrow?
+ * const result = isTomorrow(new Date(2014, 9, 7, 14, 0))
+ * //=> true
+ */
+function isTomorrow(date) {
+  return isSameDay(date, addDays(constructNow(date), 1));
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isTomorrow = ((/* unused pure expression or super */ null && (isTomorrow)));
+
 ;// CONCATENATED MODULE: ./src/View.js
 
 
@@ -6209,11 +6465,7 @@ function format_cleanEscapedString(input) {
 //     }
 
 //     const addProjectToDialog = (project) => {
-//         const select = document.getElementById('project');
-//         const option = document.createElement('option');
-//         option.setAttribute('data-key', project.key);
-//         option.textContent = project.name;
-//         select.appendChild(option);
+
 //     }
 
 //     // TODO!
@@ -6225,7 +6477,6 @@ function format_cleanEscapedString(input) {
 class TodoView {
     constructor() {
         this.todoList = document.getElementById('todoList');
-        this.noTodosMsg = this.todoList.getElementsByTagName('p')[0];
 
         this.dialogBtn = document.getElementById('dialogBtn');
         this.closeDialogBtn = document.getElementById('closeDialogBtn');
@@ -6234,6 +6485,9 @@ class TodoView {
 
         this.themeBtn = document.getElementById('themeBtn');
         this.pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
+
+        this.defaultTab = document.getElementById('defaultTab');
+        this.styleSelectedTab(this.defaultTab);
 
         this.nameInput = document.getElementById('name');
         this.descInput = document.getElementById('desc');
@@ -6283,19 +6537,20 @@ class TodoView {
     }
 
     displayTodoItems(todoList) {
-        
-        // toggles hidden class on "no todos message"
+        this.todoList.innerHTML = '';
+
+        // if todoList is empty, display no todos message
         if (todoList.length === 0) {
-            this.noTodosMsg.classList.remove('hidden')
-        } else {
-            this.noTodosMsg.classList.add('hidden')
+            const noTodosMsg = document.createElement('p');
+            noTodosMsg.textContent = 'No todos left in sight!';
+            this.todoList.appendChild(noTodosMsg);
         }
 
         todoList.forEach(todo => this.handleAddTodo(todo))
     }
 
     handleAddTodo(todo) {
-        
+
         // todo container
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
@@ -6355,7 +6610,19 @@ class TodoView {
     }
 
     displayProjects() {
+        const projectDropdown = document.getElementById('project');
 
+        // while dropdown has 2 children (1st child = inbox)
+        while (projectDropdown.children[1]) {
+            projectDropdown.removeChild(projectDropdown.children[1]);
+        }
+
+        const projectList = this.controller.controlGetProjects();
+        projectList.forEach((project) => {
+            const option = document.createElement('option');
+            option.textContent = project;
+            projectDropdown.appendChild(option);
+        });
     }
 
     handleOpenDialog(dialog) {
@@ -6373,6 +6640,12 @@ class TodoView {
         document.getElementById('darkModeIcon').classList.toggle('hidden');
     }
 
+    styleSelectedTab(selectedTab) {
+        selectedTab.classList.add('selected');
+        const title = document.getElementById('pageTitle');
+        title.textContent = selectedTab.textContent;
+    }
+
     handleChangePage(e) {
         Array.from(this.pageTabs).forEach(button => {
             button.classList.remove('selected');
@@ -6381,11 +6654,36 @@ class TodoView {
         let clickedTab = e.target;
         if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
         else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
-    
-        const title = document.getElementById('pageTitle');
-        title.textContent = e.target.textContent;
-        
-        clickedTab.classList.add('selected')
+
+        this.styleSelectedTab(clickedTab)
+
+        let filteredTodos = [];
+        const todoList = this.controller.controlGetTodos();
+        switch (clickedTab.textContent) {
+            case 'Inbox':
+                filteredTodos = todoList.filter((todo) => todo.project.toLowerCase() === 'Inbox'.toLowerCase());
+                this.displayTodoItems(filteredTodos);
+                break;
+            
+            case 'Today':
+                filteredTodos = todoList.filter((todo) => isToday(todo.dueDate));
+                this.displayTodoItems(filteredTodos);
+                break;
+
+            case 'Tommorow':
+                filteredTodos = todoList.filter((todo) => isTomorrow(todo.dueDate));
+                this.displayTodoItems(filteredTodos);
+                break;
+
+            case 'Week':
+                filteredTodos = todoList.filter((todo) => isWithinOneWeek(todo.dueDate, makeNewDate()));
+                this.displayTodoItems(filteredTodos);
+                break;
+
+            case 'All':
+                this.displayTodoItems(todoList);
+                break;
+        }
     }
 
     clearInputs(parentElement) {
@@ -6460,18 +6758,57 @@ class TodoController {
     }
 
     controlTodosDisplay() {
-        const myTodos = this.todoLogic.getTodos();
-        this.view.displayTodoItems(myTodos);
+        const todoList = this.todoLogic.getTodos();
+        this.view.displayTodoItems(todoList);
     }
     
     controlProjectDisplay() {
-        const myProjects = this.projectLogic.getProjects();
-        this.view.displayProjects(myProjects);
+        const projectList = this.projectLogic.getProjects();
+        this.view.displayProjects(projectList);
     }
 
+    // todo methods
     controlCreateTodo(todoData) {
         this.todoLogic.createTodo(todoData);
         this.controlTodosDisplay();
+    }
+
+    controlDeleteTodo(todoId) {
+        this.todoLogic.deleteTodo(todoId);
+        this.controlTodosDisplay();
+    }
+
+    controlGetTodoById(todoId) {
+        return this.todoLogic.getTodoById(todoId)
+    }
+
+    controlGetTodos() {
+        return this.todoLogic.getTodos();
+    }
+
+    controlUpdateTodo(todoId, todoData) {
+        this.todoLogic.updateTodo(todoId, todoData);
+        this.controlTodosDisplay();
+    }
+
+    controlToggleComplete(todoId) {
+        this.todoLogic.todoItemToggleComplete(todoId);
+        this.controlTodosDisplay();
+    }
+
+    // project methods
+    controlCreateProject(projectTitle) {
+        this.projectLogic.createProject(projectTitle);
+        this.controlProjectDisplay();
+    }
+
+    controlGetProjects() {
+        return this.projectLogic.getProjects();
+    }
+
+    controlDeleteProject() {
+        this.projectLogic.createProject(projectTitle);
+        this.controlProjectDisplay();
     }
 
     controlRestoreDefaults() {
@@ -6492,7 +6829,7 @@ class TodoController {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    localStorage.clear()
+    localStorage.clear();
     const todoLogic = new TodoLogic();
     const projectLogic = new ProjectLogic();
     const view = new TodoView();
@@ -6536,6 +6873,6 @@ document.addEventListener('DOMContentLoaded', () => {
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
 /******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-/******/ var __webpack_exports__ = (__webpack_exec__(764));
+/******/ var __webpack_exports__ = (__webpack_exec__(611));
 /******/ }
 ]);
