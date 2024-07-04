@@ -59,18 +59,57 @@ export default class TodoController {
     }
 
     controlTodosDisplay() {
-        const myTodos = this.todoLogic.getTodos();
-        this.view.displayTodoItems(myTodos);
+        const todoList = this.todoLogic.getTodos();
+        this.view.displayTodoItems(todoList);
     }
     
     controlProjectDisplay() {
-        const myProjects = this.projectLogic.getProjects();
-        this.view.displayProjects(myProjects);
+        const projectList = this.projectLogic.getProjects();
+        this.view.displayProjects(projectList);
     }
 
+    // todo methods
     controlCreateTodo(todoData) {
         this.todoLogic.createTodo(todoData);
         this.controlTodosDisplay();
+    }
+
+    controlDeleteTodo(todoId) {
+        this.todoLogic.deleteTodo(todoId);
+        this.controlTodosDisplay();
+    }
+
+    controlGetTodoById(todoId) {
+        return this.todoLogic.getTodoById(todoId)
+    }
+
+    controlGetTodos() {
+        return this.todoLogic.getTodos();
+    }
+
+    controlUpdateTodo(todoId, todoData) {
+        this.todoLogic.updateTodo(todoId, todoData);
+        this.controlTodosDisplay();
+    }
+
+    controlToggleComplete(todoId) {
+        this.todoLogic.todoItemToggleComplete(todoId);
+        this.controlTodosDisplay();
+    }
+
+    // project methods
+    controlCreateProject(projectTitle) {
+        this.projectLogic.createProject(projectTitle);
+        this.controlProjectDisplay();
+    }
+
+    controlGetProjects() {
+        return this.projectLogic.getProjects();
+    }
+
+    controlDeleteProject() {
+        this.projectLogic.createProject(projectTitle);
+        this.controlProjectDisplay();
     }
 
     controlRestoreDefaults() {
