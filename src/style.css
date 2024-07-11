@@ -56,6 +56,10 @@ body {
     display: none;
 }
 
+.opacity-0 {
+    opacity: 0;
+}
+
 button {
     color: var(--text-color);
 }
@@ -192,11 +196,12 @@ header > .nav {
 }
 
 .todo > div:last-child {
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .todo-project {
-    margin-top: 1rem;
     color: var(--dark-gray);
     font-weight: 200;
 }
@@ -236,10 +241,6 @@ header > .nav {
     background-color: var(--active-light) !important;
     border-color: var(--highlight-invert);
 }
-
-/* .edit-todo-button {
-    opacity: 0;
-} */
 
 .visible {
     opacity: 1;
