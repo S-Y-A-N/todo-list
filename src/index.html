@@ -44,7 +44,17 @@
                     </div>
                 
                     <div>
-                        <section class="project-nav"><button><span>My Projects</span><span><span><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M450-450H220v-60h230v-230h60v230h230v60H510v230h-60v-230Z"/></svg></span><span><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg></span></span></button></section>
+                        <section class="project-nav">
+                            <button><span>My Projects</span>
+                                <span>
+                                    <span id="addProjectBtn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M450-450H220v-60h230v-230h60v230h230v60H510v230h-60v-230Z"/></svg></span>
+                                    <span id="collapseProjectsBtn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg></span>
+                                </span>
+                            </button>
+                        </section>
+                        <section id="projectTabs">
+
+                        </section>
                     </div>
                 </div>
             </aside>
@@ -56,7 +66,7 @@
             <header>
                 <div class="logo">
                     <button aria-hidden="false" class="sidebar-toggle" data-toggle-sidebar="sidebar"><label for="toggle"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm120-80v-560H200v560h120Zm80 0h360v-560H400v560Zm-80 0H200h120Z"/></svg></label></button>
-                    <h1><span id="pageTitle">Today</span> todos</h1>
+                    <h1><span id="pageTitle">Today</span></h1>
                 </div>
                 <div class="nav">
                     <!-- <button id="projectBtn">My Projects</button> -->
@@ -83,8 +93,8 @@
                 <dialog id="addTodoDialog">
                     
                     <form id="todoForm" action="#" method="dialog">
-                        <textarea type="text" id="name" placeholder="Todo name" required></textarea>
-                        <textarea type="text" id="desc" placeholder="Description"></textarea>
+                        <textarea type="text" id="name" class="name-box" placeholder="Todo name" required></textarea>
+                        <textarea type="text" id="desc" class="desc-box" placeholder="Description"></textarea>
     
                         <div class="todo-controls">
                             <input type="date" id="date" placeholder="Due Date">
@@ -97,8 +107,20 @@
                             <select id="project"></select>
                         </div>
                         <div class="button-container">
-                            <button class="button" type="button" id="closeDialogBtn">Cancel</button>
-                            <button class="button" type="submit" id="submitTodo">Add todo</button>
+                            <button class="button cancel-btn" type="button" id="closeDialogBtn">Cancel</button>
+                            <button class="button submit-btn" type="submit" id="submitTodo">Add todo</button>
+                        </div>
+                    </form>
+                </dialog>
+
+                <dialog id="addProjectDialog">
+                    <form id="projectForm" action="#" method="dialog">
+                        <textarea type="text" id="projectName" class="name-box" placeholder="Project name" required></textarea>
+                        <!-- <textarea type="text" id="projectDesc" class="desc-box" placeholder="Description"></textarea> -->
+
+                        <div class="button-container">
+                            <button class="button cancel-btn" type="button" id="closeProjectDialogBtn">Cancel</button>
+                            <button class="button submit-btn" type="submit" id="submitProject">Create project</button>
                         </div>
                     </form>
                 </dialog>
