@@ -30,12 +30,12 @@ dialog textarea {
     background: var(--dialog);
 }
 
-#name {
+.name-box {
     font-size: 1.3rem;
     font-weight: bold;
 }
 
-#desc {
+.desc-box {
     font-size: 1rem;
     margin-top: 4px;
 }
@@ -60,11 +60,11 @@ select option {
     font-weight: bold;
 }
 
-#submitTodo {
+.submit-btn {
     background: var(--highlight-invert);
 }
 
-#closeDialogBtn {
+.cancel-btn {
     color: var(--dark-gray);
     background: var(--gray-highlight);
 }
