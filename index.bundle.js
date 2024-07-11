@@ -4639,17 +4639,12 @@ function isDate(date) {
 function makeNewDate(dateString) {
     if(dateString) {
         if (dateString.length === 10) {
-            console.log('calander date!')
             const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
             return startOfDay(parsedDate);
         } else {
-            console.log(dateString)
-            console.log('ugh? some date string')
             return startOfDay(new Date(dateString));
         }
     } else {
-        console.log(dateString)
-        console.log('no date string!')
         return startOfDay(new Date());
     }
 }
@@ -6460,20 +6455,6 @@ function isTomorrow(date) {
 
 
 
-//     const addProject = (project) => {
-//         addProjectToDialog(project)
-//     }
-
-//     const addProjectToDialog = (project) => {
-
-//     }
-
-//     // TODO!
-//     const addProjectToSidebar = () => {
-//         const projectDiv = document.createElement('div')
-//     }
-
-
 class TodoView {
     constructor() {
         this.todoList = document.getElementById('todoList');
@@ -6483,40 +6464,66 @@ class TodoView {
         this.addTodoDialog = document.getElementById('addTodoDialog');
         this.todoForm = document.getElementById('todoForm');
 
+        this.addProjectBtn = document.getElementById('addProjectBtn');
+        this.closeProjectDialogBtn = document.getElementById('closeProjectDialogBtn');
+        this.addProjectDialog = document.getElementById('addProjectDialog');
+        this.projectForm = document.getElementById('projectForm');
+        
         this.themeBtn = document.getElementById('themeBtn');
         this.pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
+        this.projectTabs = document.getElementById('projectTabs').getElementsByTagName('button');
 
+        // Default tab to be selected (All)
         this.defaultTab = document.getElementById('defaultTab');
         this.styleSelectedTab(this.defaultTab);
 
-        this.nameInput = document.getElementById('name');
-        this.descInput = document.getElementById('desc');
-        this.projectInput = document.getElementById('project');
-        this.priorityInput = document.getElementById('priority');
-        this.dateInput = document.getElementById('date');
+        this.nameInputs = document.getElementsByClassName('name-box');
+        this.descInputs = document.getElementsByClassName('desc-box');
 
         this.initEventHandlers();
     }
 
     initEventHandlers() {
+        // change theme to light/dark mode
         this.themeBtn.addEventListener('click', this.handleChangeTheme);
 
+        // open 'add todo' dialog | cancel | submit todo
         this.dialogBtn.addEventListener('click', () => this.handleOpenDialog(this.addTodoDialog));
         this.closeDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addTodoDialog));
-        this.todoForm.addEventListener('submit', () => this.handleSubmitTodo())
+        this.todoForm.addEventListener('submit', () => this.handleSubmitTodo());
 
-        this.nameInput.addEventListener('input', e => this.autoGrowInput(e.target))
-        this.descInput.addEventListener('input', e => this.autoGrowInput(e.target))
+        // open 'add project' dialog | cancel
+        this.addProjectBtn.addEventListener('click', () => this.handleOpenDialog(this.addProjectDialog));
+        this.closeProjectDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addProjectDialog));
+        this.projectForm.addEventListener('submit', () => this.handleSubmitProject());
 
-        Array.from(this.pageTabs).forEach(button => {
-            button.addEventListener('click', (e) => this.handleChangePage(e));
+        // autogrow the inputs
+        Array.from(this.nameInputs).forEach(input => {
+            input.addEventListener('input', e => this.autoGrowInput(e.target));
         });
+
+        Array.from(this.descInputs).forEach(input => {
+            input.addEventListener('input', e => this.autoGrowInput(e.target));
+        });
+
+        // change page to inbox, today, etc...
+        Array.from(this.pageTabs).forEach(button => {
+            button.addEventListener('click', e => this.handleChangePage(e));
+        });
+    }
+
+    handleSubmitProject() {
+        const projectName = document.getElementById('projectName').value;
+        this.controller.controlCreateProject(projectName);
+        this.projectForm.reset();
+        this.styleSelectedTab(this.defaultTab);
     }
 
     handleSubmitTodo() {
         const todoData = this.getTodoFormInputs();
         this.controller.controlCreateTodo(todoData);
         this.todoForm.reset();
+        this.styleSelectedTab(this.defaultTab);
     }
 
     getTodoFormInputs() {
@@ -6539,12 +6546,15 @@ class TodoView {
     displayTodoItems(todoList) {
         this.todoList.innerHTML = '';
 
-        // if todoList is empty, display no todos message
+        // if todoList is empty, displays 'no todos' message
         if (todoList.length === 0) {
             const noTodosMsg = document.createElement('p');
             noTodosMsg.textContent = 'No todos left in sight!';
             this.todoList.appendChild(noTodosMsg);
         }
+
+        // sorts todo list by due date (ascending)
+        todoList.sort((todo1, todo2) => makeNewDate(todo1.dueDate) - makeNewDate(todo2.dueDate))
 
         todoList.forEach(todo => this.handleAddTodo(todo))
     }
@@ -6584,9 +6594,17 @@ class TodoView {
         const check_circle = document.createElement('div');
         check_circle.classList.add('check-circle');
 
-        const more_vert = document.createElement('img');
-        more_vert.setAttribute('src', './resources/more_vert_24dp_FILL0_wght400_GRAD0_opsz24.svg');
-        more_vert.classList.add('edit-todo-button')
+        const editBtn = document.createElement('img');
+        editBtn.setAttribute('src', './resources/edit_23dp_E8EAED_FILL0_wght200_GRAD0_opsz24.svg');
+
+        const deleteBtn = document.createElement('img');
+        deleteBtn.setAttribute('src', './resources/delete_23dp_E8EAED_FILL0_wght200_GRAD0_opsz24.svg');
+
+        const editDeleteSpan = document.createElement('span');
+        editDeleteSpan.id = 'todoEditBtns';
+        editDeleteSpan.classList.add('opacity-0')
+        editDeleteSpan.appendChild(editBtn);    
+        editDeleteSpan.appendChild(deleteBtn);    
 
         const line = document.createElement('div');
         line.classList.add('line');
@@ -6595,8 +6613,10 @@ class TodoView {
         todoLv1.appendChild(check_circle);
         todoLv1.appendChild(todoTitle);
         todoLv1.appendChild(todoDate);
-        // todoLv1.appendChild(more_vert);
+
         todoLv2.appendChild(todoDesc);
+
+        todoLv3.appendChild(editDeleteSpan);
         todoLv3.appendChild(todoProject);
 
         // appending levels to todo container
@@ -6607,21 +6627,43 @@ class TodoView {
         // appending todo container to todo list
         this.todoList.appendChild(todoDiv);
         this.todoList.appendChild(line);
+
+        // todo hovering event listener
+        // note: using arrow function, 'this' inside the listener function refers to the class (= the outer scope)
+        todoDiv.addEventListener('mouseenter', this.handleTodoHover);
+        todoDiv.addEventListener('mouseleave', this.handleTodoHover);
+    }
+
+    handleTodoHover(e) {
+        const editBtn = this.querySelector('#todoEditBtns');
+        if (e.type === "mouseenter") editBtn.classList.remove('opacity-0')
+        else editBtn.classList.add('opacity-0')
     }
 
     displayProjects() {
+        // removes all projects from dropdown
         const projectDropdown = document.getElementById('project');
+        projectDropdown.innerHTML = ''
 
-        // while dropdown has 2 children (1st child = inbox)
-        while (projectDropdown.children[1]) {
-            projectDropdown.removeChild(projectDropdown.children[1]);
-        }
+        // removes all projects from sidebar
+        const projectNav = document.getElementById('projectTabs');
+        projectNav.innerHTML = ''
 
         const projectList = this.controller.controlGetProjects();
         projectList.forEach((project) => {
+            // displays projects in dialog dropdown
             const option = document.createElement('option');
             option.textContent = project;
             projectDropdown.appendChild(option);
+
+            // skips displaying 'inbox' in sidebar
+            if (project.toLowerCase() === 'inbox') return;
+
+            // displays project in sidebar
+            const button = document.createElement('button');
+            button.textContent = `# ${project}`;
+            projectNav.appendChild(button);
+            button.addEventListener('click', e => this.handleChangePage(e));
         });
     }
 
@@ -6641,16 +6683,22 @@ class TodoView {
     }
 
     styleSelectedTab(selectedTab) {
-        selectedTab.classList.add('selected');
-        const title = document.getElementById('pageTitle');
-        title.textContent = selectedTab.textContent;
-    }
-
-    handleChangePage(e) {
+        // remove styling from all unselected tabs
         Array.from(this.pageTabs).forEach(button => {
             button.classList.remove('selected');
         });
-    
+
+        Array.from(this.projectTabs).forEach(button => {
+            button.classList.remove('selected');
+        });
+
+        // add styling to selected tab
+        selectedTab.classList.add('selected');
+        const title = document.getElementById('pageTitle');
+        title.textContent = selectedTab.textContent.replace("# ", "");
+    }
+
+    handleChangePage(e) {
         let clickedTab = e.target;
         if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
         else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
@@ -6682,6 +6730,11 @@ class TodoView {
 
             case 'All':
                 this.displayTodoItems(todoList);
+                break;
+
+            default:
+                filteredTodos = todoList.filter((todo) => clickedTab.textContent.includes(todo.project));
+                this.displayTodoItems(filteredTodos);
                 break;
         }
     }
@@ -6745,7 +6798,7 @@ class TodoController {
                 desc: 'Continue through the textbook until page 130.',
                 project: 'Math Study',
                 priority: 'Important',
-                dueDate: makeFutureDate(),
+                dueDate: makeFutureDate(0),
             }
         ];
 
@@ -6829,7 +6882,6 @@ class TodoController {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    localStorage.clear();
     const todoLogic = new TodoLogic();
     const projectLogic = new ProjectLogic();
     const view = new TodoView();
@@ -6839,7 +6891,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-// Visual DOM stuff / may be discarded
+// Visual DOM stuff / to be discarded
 
 // function check_circle_done() {
 //     this.classList.toggle('check-circle-done');
@@ -6849,24 +6901,9 @@ document.addEventListener('DOMContentLoaded', () => {
 //     } else {
 //         todoTitle.style.textDecoration = 'none';
 //     }
-
-// }
-
-// function todo_hover(e) {
-//     const editBtn = this.getElementsByClassName('edit-todo-button')[0];
-//     if (e.type === "mouseenter") editBtn.classList.add('visible')
-//     else editBtn.classList.remove('visible')
 // }
 
 // document.getElementsByClassName('check-circle')[0].addEventListener('click', check_circle_done);
-
-// // on todo hover
-// const todos = document.getElementsByClassName('todo');
-// Array.from(todos).forEach(todo => {
-//     todo.addEventListener('mouseenter', todo_hover);
-//     todo.addEventListener('mouseleave', todo_hover);
-//     console.log(todos)
-// });
 
 /***/ })
 
