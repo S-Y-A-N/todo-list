@@ -46,7 +46,7 @@ export default class TodoController {
                 desc: 'Continue through the textbook until page 130.',
                 project: 'Math Study',
                 priority: 'Important',
-                dueDate: makeFutureDate(),
+                dueDate: makeFutureDate(0),
             }
         ];
 
