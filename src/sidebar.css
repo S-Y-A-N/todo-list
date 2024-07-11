@@ -40,8 +40,12 @@
     align-items: center;
 }
 
-.sidebar-content section > button:hover, .sidebar-content section > button:hover svg {
+.sidebar-content section > button:hover, #pageTabs section > button:hover svg {
     background: var(--gray-highlight);
+    fill: var(--highlight-invert);
+}
+
+#projectNav svg:hover {
     fill: var(--highlight-invert);
 }
 
