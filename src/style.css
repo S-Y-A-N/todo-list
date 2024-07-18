@@ -16,7 +16,8 @@
 
     --sidebar: rgb(241, 241, 241);
     --dialog: rgb(255, 255, 255);
-    --selected: rgb(255, 240, 240);
+    --selected: rgb(240, 255, 245);
+    --mark-complete: rgb(84, 170, 50);
 }
 
 :root.dark {
@@ -35,6 +36,7 @@
     --sidebar: rgb(38, 38, 38); /* consider: rgb(38, 38, 38) */
     --dialog: rgb(32, 32, 32);
     --selected: rgb(55, 55, 55);
+    --mark-complete: rgb(84, 170, 50);
 }
 
 * {
@@ -68,6 +70,10 @@ button:hover, .check-circle:hover {
     cursor: pointer;
 }
 
+.mark-complete {
+    background-color: var(--mark-complete);
+}
+
 svg {
     fill: var(--highlight-normal);
     margin-right: 8px;
@@ -88,6 +94,9 @@ svg:hover {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+
+    height: 100vh;
+    overflow-y: scroll;
 }
 
 .line {
@@ -107,7 +116,16 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 1rem 4rem;
+    
+    
+    /* stick header to top */
+    padding: 1rem 4rem 0;
+    position: sticky;
+    top: 0;
+
+    background-color: var(--back-bg);
+    /* x-offset, y-offset, blur, spread, color */
+    box-shadow: 0 10px 10px 1rem var(--back-bg);
 }
 
 h1 > span {
@@ -242,8 +260,14 @@ header > .nav {
     border-color: var(--highlight-invert);
 }
 
-.visible {
-    opacity: 1;
+.link {
+    background: none;
+    border: none;
+    text-decoration: underline;
+}
+
+.link:hover {
+    color: var(--highlight-normal);
 }
 
 @media (max-width: 850px) {
