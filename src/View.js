@@ -16,12 +16,9 @@ export default class TodoView {
         this.projectForm = document.getElementById('projectForm');
         
         this.themeBtn = document.getElementById('themeBtn');
+        this.finishedTodosBtn = document.getElementById('finishedTodosBtn');
         this.pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
         this.projectTabs = document.getElementById('projectTabs').getElementsByTagName('button');
-
-        // Default tab to be selected (All)
-        this.defaultTab = document.getElementById('defaultTab');
-        this.styleSelectedTab(this.defaultTab);
 
         this.nameInputs = document.getElementsByClassName('name-box');
         this.descInputs = document.getElementsByClassName('desc-box');
@@ -56,6 +53,9 @@ export default class TodoView {
         Array.from(this.pageTabs).forEach(button => {
             button.addEventListener('click', e => this.handleChangePage(e));
         });
+
+        // change page to 'finished todos'
+        this.finishedTodosBtn.addEventListener('click', e => this.handleChangePage(e))
     }
 
     handleSubmitProject() {
@@ -69,7 +69,6 @@ export default class TodoView {
         const todoData = this.getTodoFormInputs();
         this.controller.controlCreateTodo(todoData);
         this.todoForm.reset();
-        this.styleSelectedTab(this.defaultTab);
     }
 
     getTodoFormInputs() {
@@ -90,19 +89,72 @@ export default class TodoView {
     }
 
     displayTodoItems(todoList) {
-        this.todoList.innerHTML = '';
+        this.todoList.innerHTML = "";
+        const selectedTab = document.querySelector('.selected');
 
-        // if todoList is empty, displays 'no todos' message
+        // if TodoLogic!todoList is empty, displays 'no todos' message
         if (todoList.length === 0) {
-            const noTodosMsg = document.createElement('p');
-            noTodosMsg.textContent = 'No todos left in sight!';
-            this.todoList.appendChild(noTodosMsg);
+            this.handleNoTodos();
+            return;
         }
 
+        todoList = this.filterTodosByTab(todoList, selectedTab)
+        
         // sorts todo list by due date (ascending)
         todoList.sort((todo1, todo2) => makeNewDate(todo1.dueDate) - makeNewDate(todo2.dueDate))
 
-        todoList.forEach(todo => this.handleAddTodo(todo))
+
+        todoList.forEach(todo => {
+            this.handleAddTodo(todo);
+        });
+
+
+        // if View!todoList is empty (all complete), displays 'no todos' message
+        if (this.todoList.innerHTML === "") {
+            this.handleNoTodos();
+        }
+    }
+
+    filterTodosByTab(todoList, currentTab) {
+        let filteredTodos = todoList;
+        if (currentTab.id === 'finishedTodosBtn') {
+            filteredTodos = todoList.filter((todo) => todo.complete === true);
+            return filteredTodos;
+        }
+        // else:
+        filteredTodos = todoList.filter((todo) => todo.complete === false);
+
+        switch (currentTab.textContent) {
+            case 'Inbox':
+                filteredTodos = filteredTodos.filter((todo) => todo.project.toLowerCase() === 'Inbox'.toLowerCase());
+                break;
+            
+            case 'Today':
+                filteredTodos = filteredTodos.filter((todo) => isToday(todo.dueDate));
+                break;
+
+            case 'Tommorow':
+                filteredTodos = filteredTodos.filter((todo) => isTomorrow(todo.dueDate));
+                break;
+
+            case 'Week':
+                filteredTodos = filteredTodos.filter((todo) => isWithinOneWeek(todo.dueDate, makeNewDate()));
+                break;
+
+            case 'All':
+                break;
+
+            default:
+                filteredTodos = filteredTodos.filter((todo) => currentTab.textContent.includes(todo.project));
+                break;
+        }
+        return filteredTodos;
+    }
+
+    handleNoTodos() {
+        const noTodosMsg = document.createElement('p');
+        noTodosMsg.textContent = 'No todos left in sight!';
+        this.todoList.appendChild(noTodosMsg);
     }
 
     handleAddTodo(todo) {
@@ -110,6 +162,7 @@ export default class TodoView {
         // todo container
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
+        todoDiv.id = todo.id;
 
         // todo container levels:
         // 1. title + controls
@@ -128,7 +181,9 @@ export default class TodoView {
         todoTitle.textContent = todo.name;
         todoDesc.textContent = todo.desc;
         todoProject.textContent = `# ${todo.project}`;
-        if (isDate(todo.dueDate)) todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
+        if (isDate(todo.dueDate)) {
+            todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
+        }   
 
 
         todoTitle.classList.add('todo-title');
@@ -139,6 +194,10 @@ export default class TodoView {
         // extra elements
         const check_circle = document.createElement('div');
         check_circle.classList.add('check-circle');
+        check_circle.addEventListener('click', e => this.handleToggleComplete(e))
+        if (todo.complete === true) {
+            check_circle.classList.add('mark-complete');
+        }
 
         const editBtn = document.createElement('img');
         editBtn.setAttribute('src', './resources/edit_23dp_E8EAED_FILL0_wght200_GRAD0_opsz24.svg');
@@ -231,58 +290,48 @@ export default class TodoView {
     styleSelectedTab(selectedTab) {
         // remove styling from all unselected tabs
         Array.from(this.pageTabs).forEach(button => {
+            button.classList.remove('selected-tab');
             button.classList.remove('selected');
         });
 
         Array.from(this.projectTabs).forEach(button => {
+            button.classList.remove('selected-tab');
             button.classList.remove('selected');
         });
 
+        this.finishedTodosBtn.classList.remove('selected-link');
+        this.finishedTodosBtn.classList.remove('selected');
+
         // add styling to selected tab
-        selectedTab.classList.add('selected');
+        selectedTab.classList.add('selected')
+
+        if (selectedTab.classList.contains('link')) {
+            selectedTab.classList.add('selected-link');
+        } else {
+            selectedTab.classList.add('selected-tab');
+        }
+
         const title = document.getElementById('pageTitle');
         title.textContent = selectedTab.textContent.replace("# ", "");
     }
 
     handleChangePage(e) {
-        let clickedTab = e.target;
-        if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
-        else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
+        let clickedTab = e;
+        if (e instanceof PointerEvent) {
+            clickedTab = e.target;
+            if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
+            else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
+        }
 
         this.styleSelectedTab(clickedTab)
 
-        let filteredTodos = [];
         const todoList = this.controller.controlGetTodos();
-        switch (clickedTab.textContent) {
-            case 'Inbox':
-                filteredTodos = todoList.filter((todo) => todo.project.toLowerCase() === 'Inbox'.toLowerCase());
-                this.displayTodoItems(filteredTodos);
-                break;
-            
-            case 'Today':
-                filteredTodos = todoList.filter((todo) => isToday(todo.dueDate));
-                this.displayTodoItems(filteredTodos);
-                break;
+        this.displayTodoItems(todoList);
+    }
 
-            case 'Tommorow':
-                filteredTodos = todoList.filter((todo) => isTomorrow(todo.dueDate));
-                this.displayTodoItems(filteredTodos);
-                break;
-
-            case 'Week':
-                filteredTodos = todoList.filter((todo) => isWithinOneWeek(todo.dueDate, makeNewDate()));
-                this.displayTodoItems(filteredTodos);
-                break;
-
-            case 'All':
-                this.displayTodoItems(todoList);
-                break;
-
-            default:
-                filteredTodos = todoList.filter((todo) => clickedTab.textContent.includes(todo.project));
-                this.displayTodoItems(filteredTodos);
-                break;
-        }
+    handleToggleComplete(e) {
+        const todoItem = e.target.parentElement.parentElement;
+        this.controller.controlToggleComplete(todoItem.id);
     }
 
     clearInputs(parentElement) {
