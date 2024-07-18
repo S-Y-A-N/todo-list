@@ -4776,6 +4776,152 @@ class ProjectLogic {
         this.projectList.splice(index, 1);
     }
 }
+;// CONCATENATED MODULE: ./node_modules/date-fns/constructNow.mjs
+
+
+/**
+ * @name constructNow
+ * @category Generic Helpers
+ * @summary Constructs a new current date using the passed value constructor.
+ * @pure false
+ *
+ * @description
+ * The function constructs a new current date using the constructor from
+ * the reference date. It helps to build generic functions that accept date
+ * extensions and use the current date.
+ *
+ * It defaults to `Date` if the passed reference date is a number or a string.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The reference date to take constructor from
+ *
+ * @returns Current date initialized using the given date constructor
+ *
+ * @example
+ * import { constructNow, isSameDay } from 'date-fns'
+ *
+ * function isToday<DateType extends Date>(
+ *   date: DateType | number | string,
+ * ): boolean {
+ *   // If we were to use `new Date()` directly, the function would  behave
+ *   // differently in different timezones and return false for the same date.
+ *   return isSameDay(date, constructNow(date));
+ * }
+ */
+function constructNow(date) {
+  return constructFrom(date, Date.now());
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_constructNow = ((/* unused pure expression or super */ null && (constructNow)));
+
+;// CONCATENATED MODULE: ./node_modules/date-fns/isSameDay.mjs
+
+
+/**
+ * @name isSameDay
+ * @category Day Helpers
+ * @summary Are the given dates in the same day (and year and month)?
+ *
+ * @description
+ * Are the given dates in the same day (and year and month)?
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param dateLeft - The first date to check
+ * @param dateRight - The second date to check
+
+ * @returns The dates are in the same day (and year and month)
+ *
+ * @example
+ * // Are 4 September 06:00:00 and 4 September 18:00:00 in the same day?
+ * const result = isSameDay(new Date(2014, 8, 4, 6, 0), new Date(2014, 8, 4, 18, 0))
+ * //=> true
+ *
+ * @example
+ * // Are 4 September and 4 October in the same day?
+ * const result = isSameDay(new Date(2014, 8, 4), new Date(2014, 9, 4))
+ * //=> false
+ *
+ * @example
+ * // Are 4 September, 2014 and 4 September, 2015 in the same day?
+ * const result = isSameDay(new Date(2014, 8, 4), new Date(2015, 8, 4))
+ * //=> false
+ */
+function isSameDay(dateLeft, dateRight) {
+  const dateLeftStartOfDay = startOfDay(dateLeft);
+  const dateRightStartOfDay = startOfDay(dateRight);
+
+  return +dateLeftStartOfDay === +dateRightStartOfDay;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isSameDay = ((/* unused pure expression or super */ null && (isSameDay)));
+
+;// CONCATENATED MODULE: ./node_modules/date-fns/isToday.mjs
+
+
+
+/**
+ * @name isToday
+ * @category Day Helpers
+ * @summary Is the given date today?
+ * @pure false
+ *
+ * @description
+ * Is the given date today?
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to check
+ *
+ * @returns The date is today
+ *
+ * @example
+ * // If today is 6 October 2014, is 6 October 14:00:00 today?
+ * const result = isToday(new Date(2014, 9, 6, 14, 0))
+ * //=> true
+ */
+function isToday(date) {
+  return isSameDay(date, constructNow(date));
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isToday = ((/* unused pure expression or super */ null && (isToday)));
+
+;// CONCATENATED MODULE: ./node_modules/date-fns/isTomorrow.mjs
+
+
+
+
+/**
+ * @name isTomorrow
+ * @category Day Helpers
+ * @summary Is the given date tomorrow?
+ * @pure false
+ *
+ * @description
+ * Is the given date tomorrow?
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to check
+ *
+ * @returns The date is tomorrow
+ *
+ * @example
+ * // If today is 6 October 2014, is 7 October 14:00:00 tomorrow?
+ * const result = isTomorrow(new Date(2014, 9, 7, 14, 0))
+ * //=> true
+ */
+function isTomorrow(date) {
+  return isSameDay(date, addDays(constructNow(date), 1));
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const date_fns_isTomorrow = ((/* unused pure expression or super */ null && (isTomorrow)));
+
 ;// CONCATENATED MODULE: ./node_modules/date-fns/differenceInCalendarDays.mjs
 
 
@@ -6305,152 +6451,6 @@ function format_cleanEscapedString(input) {
 // Fallback for modularized imports:
 /* harmony default export */ const date_fns_format = ((/* unused pure expression or super */ null && (format)));
 
-;// CONCATENATED MODULE: ./node_modules/date-fns/constructNow.mjs
-
-
-/**
- * @name constructNow
- * @category Generic Helpers
- * @summary Constructs a new current date using the passed value constructor.
- * @pure false
- *
- * @description
- * The function constructs a new current date using the constructor from
- * the reference date. It helps to build generic functions that accept date
- * extensions and use the current date.
- *
- * It defaults to `Date` if the passed reference date is a number or a string.
- *
- * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
- *
- * @param date - The reference date to take constructor from
- *
- * @returns Current date initialized using the given date constructor
- *
- * @example
- * import { constructNow, isSameDay } from 'date-fns'
- *
- * function isToday<DateType extends Date>(
- *   date: DateType | number | string,
- * ): boolean {
- *   // If we were to use `new Date()` directly, the function would  behave
- *   // differently in different timezones and return false for the same date.
- *   return isSameDay(date, constructNow(date));
- * }
- */
-function constructNow(date) {
-  return constructFrom(date, Date.now());
-}
-
-// Fallback for modularized imports:
-/* harmony default export */ const date_fns_constructNow = ((/* unused pure expression or super */ null && (constructNow)));
-
-;// CONCATENATED MODULE: ./node_modules/date-fns/isSameDay.mjs
-
-
-/**
- * @name isSameDay
- * @category Day Helpers
- * @summary Are the given dates in the same day (and year and month)?
- *
- * @description
- * Are the given dates in the same day (and year and month)?
- *
- * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
- *
- * @param dateLeft - The first date to check
- * @param dateRight - The second date to check
-
- * @returns The dates are in the same day (and year and month)
- *
- * @example
- * // Are 4 September 06:00:00 and 4 September 18:00:00 in the same day?
- * const result = isSameDay(new Date(2014, 8, 4, 6, 0), new Date(2014, 8, 4, 18, 0))
- * //=> true
- *
- * @example
- * // Are 4 September and 4 October in the same day?
- * const result = isSameDay(new Date(2014, 8, 4), new Date(2014, 9, 4))
- * //=> false
- *
- * @example
- * // Are 4 September, 2014 and 4 September, 2015 in the same day?
- * const result = isSameDay(new Date(2014, 8, 4), new Date(2015, 8, 4))
- * //=> false
- */
-function isSameDay(dateLeft, dateRight) {
-  const dateLeftStartOfDay = startOfDay(dateLeft);
-  const dateRightStartOfDay = startOfDay(dateRight);
-
-  return +dateLeftStartOfDay === +dateRightStartOfDay;
-}
-
-// Fallback for modularized imports:
-/* harmony default export */ const date_fns_isSameDay = ((/* unused pure expression or super */ null && (isSameDay)));
-
-;// CONCATENATED MODULE: ./node_modules/date-fns/isToday.mjs
-
-
-
-/**
- * @name isToday
- * @category Day Helpers
- * @summary Is the given date today?
- * @pure false
- *
- * @description
- * Is the given date today?
- *
- * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
- *
- * @param date - The date to check
- *
- * @returns The date is today
- *
- * @example
- * // If today is 6 October 2014, is 6 October 14:00:00 today?
- * const result = isToday(new Date(2014, 9, 6, 14, 0))
- * //=> true
- */
-function isToday(date) {
-  return isSameDay(date, constructNow(date));
-}
-
-// Fallback for modularized imports:
-/* harmony default export */ const date_fns_isToday = ((/* unused pure expression or super */ null && (isToday)));
-
-;// CONCATENATED MODULE: ./node_modules/date-fns/isTomorrow.mjs
-
-
-
-
-/**
- * @name isTomorrow
- * @category Day Helpers
- * @summary Is the given date tomorrow?
- * @pure false
- *
- * @description
- * Is the given date tomorrow?
- *
- * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
- *
- * @param date - The date to check
- *
- * @returns The date is tomorrow
- *
- * @example
- * // If today is 6 October 2014, is 7 October 14:00:00 tomorrow?
- * const result = isTomorrow(new Date(2014, 9, 7, 14, 0))
- * //=> true
- */
-function isTomorrow(date) {
-  return isSameDay(date, addDays(constructNow(date), 1));
-}
-
-// Fallback for modularized imports:
-/* harmony default export */ const date_fns_isTomorrow = ((/* unused pure expression or super */ null && (isTomorrow)));
-
 ;// CONCATENATED MODULE: ./src/View.js
 
 
@@ -6470,12 +6470,9 @@ class TodoView {
         this.projectForm = document.getElementById('projectForm');
         
         this.themeBtn = document.getElementById('themeBtn');
+        this.finishedTodosBtn = document.getElementById('finishedTodosBtn');
         this.pageTabs = document.getElementById('pageTabs').getElementsByTagName('button');
         this.projectTabs = document.getElementById('projectTabs').getElementsByTagName('button');
-
-        // Default tab to be selected (All)
-        this.defaultTab = document.getElementById('defaultTab');
-        this.styleSelectedTab(this.defaultTab);
 
         this.nameInputs = document.getElementsByClassName('name-box');
         this.descInputs = document.getElementsByClassName('desc-box');
@@ -6510,6 +6507,9 @@ class TodoView {
         Array.from(this.pageTabs).forEach(button => {
             button.addEventListener('click', e => this.handleChangePage(e));
         });
+
+        // change page to 'finished todos'
+        this.finishedTodosBtn.addEventListener('click', e => this.handleChangePage(e))
     }
 
     handleSubmitProject() {
@@ -6523,7 +6523,6 @@ class TodoView {
         const todoData = this.getTodoFormInputs();
         this.controller.controlCreateTodo(todoData);
         this.todoForm.reset();
-        this.styleSelectedTab(this.defaultTab);
     }
 
     getTodoFormInputs() {
@@ -6544,19 +6543,72 @@ class TodoView {
     }
 
     displayTodoItems(todoList) {
-        this.todoList.innerHTML = '';
+        this.todoList.innerHTML = "";
+        const selectedTab = document.querySelector('.selected');
 
-        // if todoList is empty, displays 'no todos' message
+        // if TodoLogic!todoList is empty, displays 'no todos' message
         if (todoList.length === 0) {
-            const noTodosMsg = document.createElement('p');
-            noTodosMsg.textContent = 'No todos left in sight!';
-            this.todoList.appendChild(noTodosMsg);
+            this.handleNoTodos();
+            return;
         }
 
+        todoList = this.filterTodosByTab(todoList, selectedTab)
+        
         // sorts todo list by due date (ascending)
         todoList.sort((todo1, todo2) => makeNewDate(todo1.dueDate) - makeNewDate(todo2.dueDate))
 
-        todoList.forEach(todo => this.handleAddTodo(todo))
+
+        todoList.forEach(todo => {
+            this.handleAddTodo(todo);
+        });
+
+
+        // if View!todoList is empty (all complete), displays 'no todos' message
+        if (this.todoList.innerHTML === "") {
+            this.handleNoTodos();
+        }
+    }
+
+    filterTodosByTab(todoList, currentTab) {
+        let filteredTodos = todoList;
+        if (currentTab.id === 'finishedTodosBtn') {
+            filteredTodos = todoList.filter((todo) => todo.complete === true);
+            return filteredTodos;
+        }
+        // else:
+        filteredTodos = todoList.filter((todo) => todo.complete === false);
+
+        switch (currentTab.textContent) {
+            case 'Inbox':
+                filteredTodos = filteredTodos.filter((todo) => todo.project.toLowerCase() === 'Inbox'.toLowerCase());
+                break;
+            
+            case 'Today':
+                filteredTodos = filteredTodos.filter((todo) => isToday(todo.dueDate));
+                break;
+
+            case 'Tommorow':
+                filteredTodos = filteredTodos.filter((todo) => isTomorrow(todo.dueDate));
+                break;
+
+            case 'Week':
+                filteredTodos = filteredTodos.filter((todo) => isWithinOneWeek(todo.dueDate, makeNewDate()));
+                break;
+
+            case 'All':
+                break;
+
+            default:
+                filteredTodos = filteredTodos.filter((todo) => currentTab.textContent.includes(todo.project));
+                break;
+        }
+        return filteredTodos;
+    }
+
+    handleNoTodos() {
+        const noTodosMsg = document.createElement('p');
+        noTodosMsg.textContent = 'No todos left in sight!';
+        this.todoList.appendChild(noTodosMsg);
     }
 
     handleAddTodo(todo) {
@@ -6564,6 +6616,7 @@ class TodoView {
         // todo container
         const todoDiv = document.createElement('div');
         todoDiv.classList.add('todo');
+        todoDiv.id = todo.id;
 
         // todo container levels:
         // 1. title + controls
@@ -6582,7 +6635,9 @@ class TodoView {
         todoTitle.textContent = todo.name;
         todoDesc.textContent = todo.desc;
         todoProject.textContent = `# ${todo.project}`;
-        if (isDate(todo.dueDate)) todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
+        if (isDate(todo.dueDate)) {
+            todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
+        }   
 
 
         todoTitle.classList.add('todo-title');
@@ -6593,6 +6648,10 @@ class TodoView {
         // extra elements
         const check_circle = document.createElement('div');
         check_circle.classList.add('check-circle');
+        check_circle.addEventListener('click', e => this.handleToggleComplete(e))
+        if (todo.complete === true) {
+            check_circle.classList.add('mark-complete');
+        }
 
         const editBtn = document.createElement('img');
         editBtn.setAttribute('src', './resources/edit_23dp_E8EAED_FILL0_wght200_GRAD0_opsz24.svg');
@@ -6685,58 +6744,48 @@ class TodoView {
     styleSelectedTab(selectedTab) {
         // remove styling from all unselected tabs
         Array.from(this.pageTabs).forEach(button => {
+            button.classList.remove('selected-tab');
             button.classList.remove('selected');
         });
 
         Array.from(this.projectTabs).forEach(button => {
+            button.classList.remove('selected-tab');
             button.classList.remove('selected');
         });
 
+        this.finishedTodosBtn.classList.remove('selected-link');
+        this.finishedTodosBtn.classList.remove('selected');
+
         // add styling to selected tab
-        selectedTab.classList.add('selected');
+        selectedTab.classList.add('selected')
+
+        if (selectedTab.classList.contains('link')) {
+            selectedTab.classList.add('selected-link');
+        } else {
+            selectedTab.classList.add('selected-tab');
+        }
+
         const title = document.getElementById('pageTitle');
         title.textContent = selectedTab.textContent.replace("# ", "");
     }
 
     handleChangePage(e) {
-        let clickedTab = e.target;
-        if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
-        else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
+        let clickedTab = e;
+        if (e instanceof PointerEvent) {
+            clickedTab = e.target;
+            if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
+            else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
+        }
 
         this.styleSelectedTab(clickedTab)
 
-        let filteredTodos = [];
         const todoList = this.controller.controlGetTodos();
-        switch (clickedTab.textContent) {
-            case 'Inbox':
-                filteredTodos = todoList.filter((todo) => todo.project.toLowerCase() === 'Inbox'.toLowerCase());
-                this.displayTodoItems(filteredTodos);
-                break;
-            
-            case 'Today':
-                filteredTodos = todoList.filter((todo) => isToday(todo.dueDate));
-                this.displayTodoItems(filteredTodos);
-                break;
+        this.displayTodoItems(todoList);
+    }
 
-            case 'Tommorow':
-                filteredTodos = todoList.filter((todo) => isTomorrow(todo.dueDate));
-                this.displayTodoItems(filteredTodos);
-                break;
-
-            case 'Week':
-                filteredTodos = todoList.filter((todo) => isWithinOneWeek(todo.dueDate, makeNewDate()));
-                this.displayTodoItems(filteredTodos);
-                break;
-
-            case 'All':
-                this.displayTodoItems(todoList);
-                break;
-
-            default:
-                filteredTodos = todoList.filter((todo) => clickedTab.textContent.includes(todo.project));
-                this.displayTodoItems(filteredTodos);
-                break;
-        }
+    handleToggleComplete(e) {
+        const todoItem = e.target.parentElement.parentElement;
+        this.controller.controlToggleComplete(todoItem.id);
     }
 
     clearInputs(parentElement) {
