@@ -12,6 +12,7 @@ export default class TodoController {
 
     init() {
         this.loadTodos();
+        this.loadProjects();
         this.controlTodosDisplay();
         this.controlProjectDisplay();
     }
@@ -23,6 +24,11 @@ export default class TodoController {
         } else {
             this.initDefaultTodos();
         }
+    }
+
+    loadProjects() {
+        const storedProjects = JSON.parse(localStorage.getItem('projectList'));
+        storedProjects.forEach((project) => this.projectLogic.createProject(project));
     }
 
     initDefaultTodos() {

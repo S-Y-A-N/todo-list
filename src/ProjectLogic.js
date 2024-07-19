@@ -12,13 +12,19 @@ export default class ProjectLogic {
     }
 
     createProject(title) {
-        if(!this.projectList.includes(title)) {
+        if (!this.projectList.includes(title)) {
             this.projectList.push(title);
+            this.saveToLocal();
         }
     }
 
     deleteProject(title) {
         const index = this.projectList.findIndex(title);
         this.projectList.splice(index, 1);
+        this.saveToLocal();
+    }
+
+    saveToLocal() {
+        localStorage.setItem('projectList', JSON.stringify(this.projectList));
     }
 }
