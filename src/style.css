@@ -270,6 +270,15 @@ header > .nav {
     color: var(--highlight-normal);
 }
 
+#todoEditBtns svg {
+    fill: var(--gray);
+    margin-right: 2px;
+}
+
+#todoEditBtns svg:hover {
+    fill: var(--highlight-normal);
+}
+
 @media (max-width: 850px) {
     #todoContainer {
         margin: 0 2rem;
