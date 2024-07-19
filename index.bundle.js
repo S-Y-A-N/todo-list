@@ -4766,14 +4766,20 @@ class ProjectLogic {
     }
 
     createProject(title) {
-        if(!this.projectList.includes(title)) {
+        if (!this.projectList.includes(title)) {
             this.projectList.push(title);
+            this.saveToLocal();
         }
     }
 
     deleteProject(title) {
         const index = this.projectList.findIndex(title);
         this.projectList.splice(index, 1);
+        this.saveToLocal();
+    }
+
+    saveToLocal() {
+        localStorage.setItem('projectList', JSON.stringify(this.projectList));
     }
 }
 ;// CONCATENATED MODULE: ./node_modules/date-fns/constructNow.mjs
@@ -6516,7 +6522,6 @@ class TodoView {
         const projectName = document.getElementById('projectName').value;
         this.controller.controlCreateProject(projectName);
         this.projectForm.reset();
-        this.styleSelectedTab(this.defaultTab);
     }
 
     handleSubmitTodo() {
@@ -6653,11 +6658,11 @@ class TodoView {
             check_circle.classList.add('mark-complete');
         }
 
-        const editBtn = document.createElement('img');
-        editBtn.setAttribute('src', './resources/edit_23dp_E8EAED_FILL0_wght200_GRAD0_opsz24.svg');
+        const editBtn = document.createElement('span');
+        editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h43.92l427.93-427.92-43.93-43.93L200-243.92V-200Zm-40 40v-100.77l527.23-527.77q6.15-5.48 13.57-8.47 7.43-2.99 15.49-2.99t15.62 2.54q7.55 2.54 13.94 9.15l42.69 42.93q6.61 6.38 9.04 14 2.42 7.63 2.42 15.25 0 8.13-2.74 15.56-2.74 7.42-8.72 13.57L260.77-160H160Zm600.77-556.31-44.46-44.46 44.46 44.46ZM649.5-649.5l-21.58-22.35 43.93 43.93-22.35-21.58Z"/></svg>';
 
-        const deleteBtn = document.createElement('img');
-        deleteBtn.setAttribute('src', './resources/delete_23dp_E8EAED_FILL0_wght200_GRAD0_opsz24.svg');
+        const deleteBtn = document.createElement('span');
+        deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M304.62-160q-26.85 0-45.74-18.88Q240-197.77 240-224.62V-720h-40v-40h160v-30.77h240V-760h160v40h-40v495.38q0 27.62-18.5 46.12Q683-160 655.38-160H304.62ZM680-720H280v495.38q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h350.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93V-720ZM392.31-280h40v-360h-40v360Zm135.38 0h40v-360h-40v360ZM280-720v520-520Z"/></svg>';
 
         const editDeleteSpan = document.createElement('span');
         editDeleteSpan.id = 'todoEditBtns';
@@ -6813,6 +6818,7 @@ class TodoController {
 
     init() {
         this.loadTodos();
+        this.loadProjects();
         this.controlTodosDisplay();
         this.controlProjectDisplay();
     }
@@ -6824,6 +6830,11 @@ class TodoController {
         } else {
             this.initDefaultTodos();
         }
+    }
+
+    loadProjects() {
+        const storedProjects = JSON.parse(localStorage.getItem('projectList'));
+        storedProjects.forEach((project) => this.projectLogic.createProject(project));
     }
 
     initDefaultTodos() {
