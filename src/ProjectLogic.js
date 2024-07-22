@@ -1,6 +1,7 @@
 export default class ProjectLogic {
     constructor() {
         this.projectList = ['Inbox', 'Chores', 'Math Study', 'Workout'];
+        this.saveToLocal();
     }
 
     getProjects() {
