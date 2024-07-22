@@ -14,19 +14,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const controller = new TodoController(todoLogic, projectLogic, view);
     controller.init();
-})
-
-
-// Visual DOM stuff / to be discarded
-
-// function check_circle_done() {
-//     this.classList.toggle('check-circle-done');
-//     const todoTitle = this.nextSibling;
-//     if (this.classList.contains('check-circle-done')) {
-//         todoTitle.style.textDecoration = 'line-through';
-//     } else {
-//         todoTitle.style.textDecoration = 'none';
-//     }
-// }
-
-// document.getElementsByClassName('check-circle')[0].addEventListener('click', check_circle_done);
+});
