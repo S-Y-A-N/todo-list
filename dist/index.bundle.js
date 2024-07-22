@@ -4755,6 +4755,7 @@ class TodoLogic {
 class ProjectLogic {
     constructor() {
         this.projectList = ['Inbox', 'Chores', 'Math Study', 'Workout'];
+        this.saveToLocal();
     }
 
     getProjects() {
@@ -6547,9 +6548,24 @@ class TodoView {
         return todoData;
     }
 
+    setTodoFormInputs(todoData) {
+        const nameInput = document.getElementById('name');
+        const descInput = document.getElementById('desc');
+        const projectInput = document.getElementById('project');
+        const priorityInput = document.getElementById('priority');
+        const dateInput = document.getElementById('date');
+
+        nameInput.value = todoData.name;
+        descInput.value = todoData.desc;
+        projectInput.value = todoData.project;
+        priorityInput.value = todoData.priority;
+        dateInput.value = todoData.dueDate;
+    }
+
     displayTodoItems(todoList) {
         this.todoList.innerHTML = "";
         const selectedTab = document.querySelector('.selected');
+        this.styleSelectedTab(selectedTab);
 
         // if TodoLogic!todoList is empty, displays 'no todos' message
         if (todoList.length === 0) {
@@ -6576,6 +6592,7 @@ class TodoView {
 
     filterTodosByTab(todoList, currentTab) {
         let filteredTodos = todoList;
+
         if (currentTab.id === 'finishedTodosBtn') {
             filteredTodos = todoList.filter((todo) => todo.complete === true);
             return filteredTodos;
@@ -6650,7 +6667,7 @@ class TodoView {
         todoProject.classList.add('todo-project');
         todoDate.classList.add('todo-date');
 
-        // extra elements
+        // toggle todo complete component
         const check_circle = document.createElement('div');
         check_circle.classList.add('check-circle');
         check_circle.addEventListener('click', e => this.handleToggleComplete(e))
@@ -6658,11 +6675,15 @@ class TodoView {
             check_circle.classList.add('mark-complete');
         }
 
+        // edit todo component
         const editBtn = document.createElement('span');
         editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h43.92l427.93-427.92-43.93-43.93L200-243.92V-200Zm-40 40v-100.77l527.23-527.77q6.15-5.48 13.57-8.47 7.43-2.99 15.49-2.99t15.62 2.54q7.55 2.54 13.94 9.15l42.69 42.93q6.61 6.38 9.04 14 2.42 7.63 2.42 15.25 0 8.13-2.74 15.56-2.74 7.42-8.72 13.57L260.77-160H160Zm600.77-556.31-44.46-44.46 44.46 44.46ZM649.5-649.5l-21.58-22.35 43.93 43.93-22.35-21.58Z"/></svg>';
+        editBtn.addEventListener('click', e => this.handleEditTodo(e));
 
+        // delete todo component
         const deleteBtn = document.createElement('span');
         deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M304.62-160q-26.85 0-45.74-18.88Q240-197.77 240-224.62V-720h-40v-40h160v-30.77h240V-760h160v40h-40v495.38q0 27.62-18.5 46.12Q683-160 655.38-160H304.62ZM680-720H280v495.38q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h350.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93V-720ZM392.31-280h40v-360h-40v360Zm135.38 0h40v-360h-40v360ZM280-720v520-520Z"/></svg>';
+        deleteBtn.addEventListener('click', e => this.handleDeleteTodo(e));
 
         const editDeleteSpan = document.createElement('span');
         editDeleteSpan.id = 'todoEditBtns';
@@ -6696,6 +6717,31 @@ class TodoView {
         // note: using arrow function, 'this' inside the listener function refers to the class (= the outer scope)
         todoDiv.addEventListener('mouseenter', this.handleTodoHover);
         todoDiv.addEventListener('mouseleave', this.handleTodoHover);
+    }
+
+    handleDeleteTodo(e) {
+        let todoItem = e.target;
+        if (todoItem.nodeName === 'path') todoItem = todoItem.parentElement.parentElement.parentElement.parentElement.parentElement;
+        else if (todoItem.nodeName === 'svg') todoItem = todoItem.parentElement.parentElement.parentElement.parentElement;
+        this.controller.controlDeleteTodo(todoItem.id);
+    }
+
+    handleEditTodo(e) {
+        let todoItem = e.target;
+        if (todoItem.nodeName === 'path') todoItem = todoItem.parentElement.parentElement.parentElement.parentElement.parentElement;
+        else if (todoItem.nodeName === 'svg') todoItem = todoItem.parentElement.parentElement.parentElement.parentElement;
+
+        const oldData = this.controller.controlGetTodoById(todoItem.id);
+        this.setTodoFormInputs(oldData);
+        // dialog to be created!
+        // this.handleOpenDialog(this.updateTodoDialog);
+        
+        this.controller.controlUpdateTodo(todoItem.id, newData)
+    }
+
+    handleToggleComplete(e) {
+        const todoItem = e.target.parentElement.parentElement;
+        this.controller.controlToggleComplete(todoItem.id);
     }
 
     handleTodoHover(e) {
@@ -6786,11 +6832,6 @@ class TodoView {
 
         const todoList = this.controller.controlGetTodos();
         this.displayTodoItems(todoList);
-    }
-
-    handleToggleComplete(e) {
-        const todoItem = e.target.parentElement.parentElement;
-        this.controller.controlToggleComplete(todoItem.id);
     }
 
     clearInputs(parentElement) {
@@ -6948,22 +6989,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const controller = new TodoController(todoLogic, projectLogic, view);
     controller.init();
-})
-
-
-// Visual DOM stuff / to be discarded
-
-// function check_circle_done() {
-//     this.classList.toggle('check-circle-done');
-//     const todoTitle = this.nextSibling;
-//     if (this.classList.contains('check-circle-done')) {
-//         todoTitle.style.textDecoration = 'line-through';
-//     } else {
-//         todoTitle.style.textDecoration = 'none';
-//     }
-// }
-
-// document.getElementsByClassName('check-circle')[0].addEventListener('click', check_circle_done);
+});
 
 /***/ })
 
