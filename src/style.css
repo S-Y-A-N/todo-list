@@ -18,6 +18,10 @@
     --dialog: rgb(255, 255, 255);
     --selected: rgb(240, 255, 245);
     --mark-complete: rgb(84, 170, 50);
+
+    --p1: rgb(255, 89, 89);
+    --p2: rgb(255, 182, 122);
+    --p3: rgb(82, 207, 82);
 }
 
 :root.dark {
@@ -37,6 +41,10 @@
     --dialog: rgb(32, 32, 32);
     --selected: rgb(55, 55, 55);
     --mark-complete: rgb(84, 170, 50);
+
+    --p1: rgb(156, 13, 13);
+    --p2: rgb(170, 92, 28);
+    --p3: rgb(9, 100, 9);
 }
 
 * {
@@ -241,6 +249,26 @@ header > .nav {
 .todo-date {
     font-family: var(--date-font);
     font-weight: 100;
+}
+
+.todo-priority {
+    padding: 4px 7px;
+    border-radius: 6px;
+    margin-right: .5rem;
+    font-size: .8rem;
+    font-weight: bold;
+}
+
+.p1 {
+    background-color: var(--p1);
+}
+
+.p2 {
+    background-color: var(--p2);
+}
+
+.p3 {
+    background-color: var(--p3);
 }
 
 .check-circle {

@@ -192,19 +192,26 @@ export default class TodoView {
         const todoDesc = document.createElement('span');
         const todoProject = document.createElement('span');
         const todoDate = document.createElement('span');
+        const todoPriority = document.createElement('span');
 
         todoTitle.textContent = todo.name;
         todoDesc.textContent = todo.desc;
         todoProject.textContent = `# ${todo.project}`;
+        todoPriority.textContent = todo.priority;
         if (isDate(todo.dueDate)) {
             todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
-        }   
+        }
 
 
         todoTitle.classList.add('todo-title');
         todoDesc.classList.add('todo-desc');
         todoProject.classList.add('todo-project');
         todoDate.classList.add('todo-date');
+
+        todoPriority.classList.add('todo-priority');
+        if (todo.priority.toLowerCase() === 'urgent') todoPriority.classList.add('p1');
+        else if (todo.priority.toLowerCase() === 'important') todoPriority.classList.add('p2');
+        else todoPriority.classList.add('p3');
 
         // toggle todo complete component
         const check_circle = document.createElement('div');
@@ -236,6 +243,7 @@ export default class TodoView {
         // appending to todo levels
         todoLv1.appendChild(check_circle);
         todoLv1.appendChild(todoTitle);
+        todoLv1.appendChild(todoPriority);
         todoLv1.appendChild(todoDate);
 
         todoLv2.appendChild(todoDesc);
