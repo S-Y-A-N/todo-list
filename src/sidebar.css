@@ -79,14 +79,24 @@ button.selected-tab {
     padding-left: .5rem;
 }
 
-.sidebar-header .sidebar-toggle svg {
+.sidebar-header .sidebar-header div:last-child svg {
     margin: 0;
+}
+
+.sidebar-header div:last-child button {
+    background: none;
+    border: none;
+    width: 30px;
 }
 
 .project-nav button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+#projectTabs button {
+    margin-bottom: 4px;
 }
 
 .sidebar-bottom {

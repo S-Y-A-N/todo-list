@@ -298,12 +298,12 @@ header > .nav {
     color: var(--highlight-normal);
 }
 
-#todoEditBtns svg {
+.todo-edit-buttons svg {
     fill: var(--gray);
     margin-right: 2px;
 }
 
-#todoEditBtns svg:hover {
+.todo-edit-buttons svg:hover {
     fill: var(--highlight-normal);
 }
 
