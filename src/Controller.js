@@ -19,7 +19,7 @@ export default class TodoController {
 
     loadTodos() {
         const storedTodos = localStorage.getItem('todoList');
-        if(storedTodos) {
+        if (storedTodos) {
             this.initStoredTodos();
         } else {
             this.initDefaultTodos();
@@ -27,6 +27,20 @@ export default class TodoController {
     }
 
     loadProjects() {
+        const storedProjects = localStorage.getItem('projectList');
+        if (storedProjects) {
+            this.initStoredProjects();
+        } else {
+            this.initDefaultProjects();
+        }
+    }
+
+    initDefaultProjects() {
+        const defaultProjects = ['Inbox', 'Chores', 'Math Study', 'Workout'];
+        defaultProjects.forEach((project) => this.projectLogic.createProject(project));
+    }
+
+    initStoredProjects() {
         const storedProjects = JSON.parse(localStorage.getItem('projectList'));
         storedProjects.forEach((project) => this.projectLogic.createProject(project));
     }
@@ -118,10 +132,16 @@ export default class TodoController {
         this.controlProjectDisplay();
     }
 
-    controlRestoreDefaults() {
-        localStorage.clear();
+    controlDeleteAll() {
         this.todoLogic.clearTodos();
         this.projectLogic.clearProjects();
+        this.init();
+    }
+
+    controlRestoreDefaults() {
+        this.todoLogic.clearTodos();
+        this.projectLogic.clearProjects();
+        localStorage.clear();
         this.init();
     }
 }

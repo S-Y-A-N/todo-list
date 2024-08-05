@@ -1,7 +1,6 @@
 export default class ProjectLogic {
     constructor() {
-        this.projectList = ['Inbox', 'Chores', 'Math Study', 'Workout'];
-        this.saveToLocal();
+        this.projectList = [];
     }
 
     getProjects() {
@@ -10,6 +9,7 @@ export default class ProjectLogic {
 
     clearProjects() {
         this.projectList = [];
+        this.saveToLocal();
     }
 
     createProject(title) {
