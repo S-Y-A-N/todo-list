@@ -104,3 +104,33 @@ dialog:not([open]) {
       opacity: 0;
     }
 }
+
+#settingsDialog {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+#settingsDialog p {
+    margin: 0 0 1rem 0;
+}
+
+#settingsDialog > button {
+    padding: .5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+#settingsDialog > button:last-child {
+    margin-bottom: 0;
+}
+
+#settingsDialog > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+#settingsDialog > div > button {
+    background: none;
+    border: none;
+    margin: 0 0 1rem 0;
+}
