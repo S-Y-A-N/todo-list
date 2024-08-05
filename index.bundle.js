@@ -4698,6 +4698,7 @@ class TodoLogic {
 
     clearTodos() {
         this.todoList = [];
+        this.saveToLocal();
     }
 
     isTodoListEmpty() {
@@ -4754,8 +4755,7 @@ class TodoLogic {
 ;// CONCATENATED MODULE: ./src/ProjectLogic.js
 class ProjectLogic {
     constructor() {
-        this.projectList = ['Inbox', 'Chores', 'Math Study', 'Workout'];
-        this.saveToLocal();
+        this.projectList = [];
     }
 
     getProjects() {
@@ -4764,6 +4764,7 @@ class ProjectLogic {
 
     clearProjects() {
         this.projectList = [];
+        this.saveToLocal();
     }
 
     createProject(title) {
@@ -6475,6 +6476,14 @@ class TodoView {
         this.closeProjectDialogBtn = document.getElementById('closeProjectDialogBtn');
         this.addProjectDialog = document.getElementById('addProjectDialog');
         this.projectForm = document.getElementById('projectForm');
+
+        this.collapseProjectsBtn = document.getElementById('collapseProjectsBtn');
+
+        this.settingsDialog = document.getElementById('settingsDialog');
+        this.openSettingsBtn = document.getElementById('openSettingsBtn');
+        this.closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        this.deleteAllBtn = document.getElementById('deleteAll');
+        this.restoreDefaultsBtn = document.getElementById('restoreDefaults');
         
         this.themeBtn = document.getElementById('themeBtn');
         this.finishedTodosBtn = document.getElementById('finishedTodosBtn');
@@ -6517,6 +6526,18 @@ class TodoView {
 
         // change page to 'finished todos'
         this.finishedTodosBtn.addEventListener('click', e => this.handleChangePage(e))
+
+        // show/hide projects
+        this.collapseProjectsBtn.addEventListener('click', this.handleCollapseProjects);
+
+        // open/close settings
+        this.openSettingsBtn.addEventListener('click', () => this.handleOpenDialog(this.settingsDialog));
+        this.closeSettingsBtn.addEventListener('click', () => this.handleCloseDialog(this.settingsDialog));
+
+        // delete all / restore defaults
+        this.deleteAllBtn.addEventListener('click', () => this.handleDeleteAll());
+        this.restoreDefaultsBtn.addEventListener('click', () => this.handleRestoreDefaults());
+
     }
 
     handleSubmitProject() {
@@ -6528,6 +6549,13 @@ class TodoView {
     handleSubmitTodo() {
         const todoData = this.getTodoFormInputs();
         this.controller.controlCreateTodo(todoData);
+        this.todoForm.reset();
+    }
+
+    handleUpdateTodo(todoId) {
+        const newData = this.getTodoFormInputs();
+        this.controller.controlUpdateTodo(todoId, newData);
+        this.controller.controlDeleteTodo(todoId)
         this.todoForm.reset();
     }
 
@@ -6653,19 +6681,28 @@ class TodoView {
         const todoDesc = document.createElement('span');
         const todoProject = document.createElement('span');
         const todoDate = document.createElement('span');
+        const todoPriority = document.createElement('span');
 
         todoTitle.textContent = todo.name;
         todoDesc.textContent = todo.desc;
         todoProject.textContent = `# ${todo.project}`;
+
         if (isDate(todo.dueDate)) {
             todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
-        }   
-
+        }
 
         todoTitle.classList.add('todo-title');
         todoDesc.classList.add('todo-desc');
         todoProject.classList.add('todo-project');
         todoDate.classList.add('todo-date');
+
+        if (todo.priority.toLowerCase() !== 'priority') {
+            todoPriority.textContent = todo.priority;
+            todoPriority.classList.add('todo-priority');
+            if (todo.priority.toLowerCase() === 'urgent') todoPriority.classList.add('p1');
+            else if (todo.priority.toLowerCase() === 'important') todoPriority.classList.add('p2');
+            else todoPriority.classList.add('p3');
+        }
 
         // toggle todo complete component
         const check_circle = document.createElement('div');
@@ -6686,7 +6723,7 @@ class TodoView {
         deleteBtn.addEventListener('click', e => this.handleDeleteTodo(e));
 
         const editDeleteSpan = document.createElement('span');
-        editDeleteSpan.id = 'todoEditBtns';
+        editDeleteSpan.classList.add('todo-edit-buttons');
         editDeleteSpan.classList.add('opacity-0')
         editDeleteSpan.appendChild(editBtn);    
         editDeleteSpan.appendChild(deleteBtn);    
@@ -6697,6 +6734,7 @@ class TodoView {
         // appending to todo levels
         todoLv1.appendChild(check_circle);
         todoLv1.appendChild(todoTitle);
+        todoLv1.appendChild(todoPriority);
         todoLv1.appendChild(todoDate);
 
         todoLv2.appendChild(todoDesc);
@@ -6733,10 +6771,8 @@ class TodoView {
 
         const oldData = this.controller.controlGetTodoById(todoItem.id);
         this.setTodoFormInputs(oldData);
-        // dialog to be created!
-        // this.handleOpenDialog(this.updateTodoDialog);
-        
-        this.controller.controlUpdateTodo(todoItem.id, newData)
+        this.handleOpenDialog(this.addTodoDialog);
+        this.todoForm.addEventListener('submit', () => this.handleUpdateTodo(todoItem.id));
     }
 
     handleToggleComplete(e) {
@@ -6745,7 +6781,7 @@ class TodoView {
     }
 
     handleTodoHover(e) {
-        const editBtn = this.querySelector('#todoEditBtns');
+        const editBtn = this.querySelector('.todo-edit-buttons');
         if (e.type === "mouseenter") editBtn.classList.remove('opacity-0')
         else editBtn.classList.add('opacity-0')
     }
@@ -6843,6 +6879,18 @@ class TodoView {
         element.style.height = "5px";
         element.style.height = (element.scrollHeight) + "px";
     }
+
+    handleCollapseProjects(e) {
+        document.getElementById('projectTabs').classList.toggle('hidden')
+    }
+
+    handleDeleteAll() {
+        this.controller.controlDeleteAll();
+    }
+
+    handleRestoreDefaults() {
+        this.controller.controlRestoreDefaults();
+    }
 }
 ;// CONCATENATED MODULE: ./src/Controller.js
 
@@ -6866,7 +6914,7 @@ class TodoController {
 
     loadTodos() {
         const storedTodos = localStorage.getItem('todoList');
-        if(storedTodos) {
+        if (storedTodos) {
             this.initStoredTodos();
         } else {
             this.initDefaultTodos();
@@ -6874,6 +6922,20 @@ class TodoController {
     }
 
     loadProjects() {
+        const storedProjects = localStorage.getItem('projectList');
+        if (storedProjects) {
+            this.initStoredProjects();
+        } else {
+            this.initDefaultProjects();
+        }
+    }
+
+    initDefaultProjects() {
+        const defaultProjects = ['Inbox', 'Chores', 'Math Study', 'Workout'];
+        defaultProjects.forEach((project) => this.projectLogic.createProject(project));
+    }
+
+    initStoredProjects() {
         const storedProjects = JSON.parse(localStorage.getItem('projectList'));
         storedProjects.forEach((project) => this.projectLogic.createProject(project));
     }
@@ -6965,10 +7027,16 @@ class TodoController {
         this.controlProjectDisplay();
     }
 
-    controlRestoreDefaults() {
-        localStorage.clear();
+    controlDeleteAll() {
         this.todoLogic.clearTodos();
         this.projectLogic.clearProjects();
+        this.init();
+    }
+
+    controlRestoreDefaults() {
+        this.todoLogic.clearTodos();
+        this.projectLogic.clearProjects();
+        localStorage.clear();
         this.init();
     }
 }
