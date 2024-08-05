@@ -14,6 +14,14 @@ export default class TodoView {
         this.closeProjectDialogBtn = document.getElementById('closeProjectDialogBtn');
         this.addProjectDialog = document.getElementById('addProjectDialog');
         this.projectForm = document.getElementById('projectForm');
+
+        this.collapseProjectsBtn = document.getElementById('collapseProjectsBtn');
+
+        this.settingsDialog = document.getElementById('settingsDialog');
+        this.openSettingsBtn = document.getElementById('openSettingsBtn');
+        this.closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        this.deleteAllBtn = document.getElementById('deleteAll');
+        this.restoreDefaultsBtn = document.getElementById('restoreDefaults');
         
         this.themeBtn = document.getElementById('themeBtn');
         this.finishedTodosBtn = document.getElementById('finishedTodosBtn');
@@ -56,6 +64,18 @@ export default class TodoView {
 
         // change page to 'finished todos'
         this.finishedTodosBtn.addEventListener('click', e => this.handleChangePage(e))
+
+        // show/hide projects
+        this.collapseProjectsBtn.addEventListener('click', this.handleCollapseProjects);
+
+        // open/close settings
+        this.openSettingsBtn.addEventListener('click', () => this.handleOpenDialog(this.settingsDialog));
+        this.closeSettingsBtn.addEventListener('click', () => this.handleCloseDialog(this.settingsDialog));
+
+        // delete all / restore defaults
+        this.deleteAllBtn.addEventListener('click', () => this.handleDeleteAll());
+        this.restoreDefaultsBtn.addEventListener('click', () => this.handleRestoreDefaults());
+
     }
 
     handleSubmitProject() {
@@ -67,6 +87,13 @@ export default class TodoView {
     handleSubmitTodo() {
         const todoData = this.getTodoFormInputs();
         this.controller.controlCreateTodo(todoData);
+        this.todoForm.reset();
+    }
+
+    handleUpdateTodo(todoId) {
+        const newData = this.getTodoFormInputs();
+        this.controller.controlUpdateTodo(todoId, newData);
+        this.controller.controlDeleteTodo(todoId)
         this.todoForm.reset();
     }
 
@@ -197,21 +224,23 @@ export default class TodoView {
         todoTitle.textContent = todo.name;
         todoDesc.textContent = todo.desc;
         todoProject.textContent = `# ${todo.project}`;
-        todoPriority.textContent = todo.priority;
+
         if (isDate(todo.dueDate)) {
             todoDate.textContent = format(todo.dueDate, "d MMM yyyy");
         }
-
 
         todoTitle.classList.add('todo-title');
         todoDesc.classList.add('todo-desc');
         todoProject.classList.add('todo-project');
         todoDate.classList.add('todo-date');
 
-        todoPriority.classList.add('todo-priority');
-        if (todo.priority.toLowerCase() === 'urgent') todoPriority.classList.add('p1');
-        else if (todo.priority.toLowerCase() === 'important') todoPriority.classList.add('p2');
-        else todoPriority.classList.add('p3');
+        if (todo.priority.toLowerCase() !== 'priority') {
+            todoPriority.textContent = todo.priority;
+            todoPriority.classList.add('todo-priority');
+            if (todo.priority.toLowerCase() === 'urgent') todoPriority.classList.add('p1');
+            else if (todo.priority.toLowerCase() === 'important') todoPriority.classList.add('p2');
+            else todoPriority.classList.add('p3');
+        }
 
         // toggle todo complete component
         const check_circle = document.createElement('div');
@@ -232,7 +261,7 @@ export default class TodoView {
         deleteBtn.addEventListener('click', e => this.handleDeleteTodo(e));
 
         const editDeleteSpan = document.createElement('span');
-        editDeleteSpan.id = 'todoEditBtns';
+        editDeleteSpan.classList.add('todo-edit-buttons');
         editDeleteSpan.classList.add('opacity-0')
         editDeleteSpan.appendChild(editBtn);    
         editDeleteSpan.appendChild(deleteBtn);    
@@ -280,10 +309,8 @@ export default class TodoView {
 
         const oldData = this.controller.controlGetTodoById(todoItem.id);
         this.setTodoFormInputs(oldData);
-        // dialog to be created!
-        // this.handleOpenDialog(this.updateTodoDialog);
-        
-        this.controller.controlUpdateTodo(todoItem.id, newData)
+        this.handleOpenDialog(this.addTodoDialog);
+        this.todoForm.addEventListener('submit', () => this.handleUpdateTodo(todoItem.id));
     }
 
     handleToggleComplete(e) {
@@ -292,7 +319,7 @@ export default class TodoView {
     }
 
     handleTodoHover(e) {
-        const editBtn = this.querySelector('#todoEditBtns');
+        const editBtn = this.querySelector('.todo-edit-buttons');
         if (e.type === "mouseenter") editBtn.classList.remove('opacity-0')
         else editBtn.classList.add('opacity-0')
     }
@@ -389,5 +416,17 @@ export default class TodoView {
     autoGrowInput(element) {
         element.style.height = "5px";
         element.style.height = (element.scrollHeight) + "px";
+    }
+
+    handleCollapseProjects(e) {
+        document.getElementById('projectTabs').classList.toggle('hidden')
+    }
+
+    handleDeleteAll() {
+        this.controller.controlDeleteAll();
+    }
+
+    handleRestoreDefaults() {
+        this.controller.controlRestoreDefaults();
     }
 }
