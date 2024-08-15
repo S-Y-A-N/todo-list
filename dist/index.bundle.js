@@ -6577,12 +6577,6 @@ class TodoView {
                 this.controller.controlUpdateTodo(todo.id, todo);
             }
         });
-
-        // reset submitter id
-        const submitter = document.querySelector('.project-submit-button');
-        submitter.id = 'project-create-button';
-        submitter.textContent = 'Create Project';
-
     }
 
     handleSubmitTodo(e) {
@@ -6605,10 +6599,6 @@ class TodoView {
         const newData = this.getTodoFormInputs();
         this.controller.controlUpdateTodo(selectedTodo.id, newData);
         this.todoForm.reset();
-
-        // reset submitter id
-        const submitter = document.querySelector('.todo-submit-button');
-        submitter.id = 'todo-create-button';
     }
 
     getProjectFormInput() {
@@ -6931,7 +6921,6 @@ class TodoView {
         projectItem.classList.add('selected-project');
         const submitter = document.querySelector('.project-submit-button');
         submitter.id = 'project-update-button';
-        submitter.textContent = 'Update Project';
 
         const oldName = projectItem.textContent.slice(2);
         this.setProjectFormInput(oldName);
@@ -6939,10 +6928,26 @@ class TodoView {
     }
 
     handleOpenDialog(dialog) {
+        const submitter = dialog.querySelector('.submit-btn');
+        if (submitter.id === 'todo-create-button') {
+            submitter.textContent = 'Add todo';
+        } else if (submitter.id === 'todo-update-button') {
+            submitter.textContent = 'Update todo';
+        } else if (submitter.id === 'project-create-button') {
+            submitter.textContent = 'Create project';
+        } else if (submitter.id === 'project-update-button') {
+            submitter.textContent = 'Update project';
+        }
         dialog.showModal();
     }
 
     handleCloseDialog(dialog) {
+        const submitter = dialog.querySelector('.submit-btn');
+        if (submitter.id === 'todo-update-button') {
+            submitter.id = 'todo-create-button';
+        } else if (submitter.id === 'project-update-button') {
+            submitter.id = 'project-create-button';
+        }
         this.clearInputs(dialog);
         dialog.close();
     }
