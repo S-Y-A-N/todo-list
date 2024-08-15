@@ -6929,14 +6929,16 @@ class TodoView {
 
     handleOpenDialog(dialog) {
         const submitter = dialog.querySelector('.submit-btn');
-        if (submitter.id === 'todo-create-button') {
-            submitter.textContent = 'Add todo';
-        } else if (submitter.id === 'todo-update-button') {
-            submitter.textContent = 'Update todo';
-        } else if (submitter.id === 'project-create-button') {
-            submitter.textContent = 'Create project';
-        } else if (submitter.id === 'project-update-button') {
-            submitter.textContent = 'Update project';
+        if (submitter) {
+            if (submitter.id === 'todo-create-button') {
+                submitter.textContent = 'Add todo';
+            } else if (submitter.id === 'todo-update-button') {
+                submitter.textContent = 'Update todo';
+            } else if (submitter.id === 'project-create-button') {
+                submitter.textContent = 'Create project';
+            } else if (submitter.id === 'project-update-button') {
+                submitter.textContent = 'Update project';
+            }
         }
         dialog.showModal();
     }
