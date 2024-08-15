@@ -6570,6 +6570,14 @@ class TodoView {
         this.controller.controlUpdateProject(oldName, newName);
         this.projectForm.reset();
 
+        const todoList = this.controller.controlGetTodos();
+        todoList.forEach((todo) => {
+            if (todo.project === oldName) {
+                todo.project = newName;
+                this.controller.controlUpdateTodo(todo.id, todo);
+            }
+        });
+
         // reset submitter id
         const submitter = document.querySelector('.project-submit-button');
         submitter.id = 'project-create-button';
@@ -6844,6 +6852,11 @@ class TodoView {
     }
 
     displayProjects() {
+        // to prevent error if the selected tab was a project (switch to default [All])
+        // Future solution: add IDs to projects (+ desc)
+        const defaultTab = document.querySelector('.default-tab');
+        this.styleSelectedTab(defaultTab)
+
         // removes all projects from dropdown
         const projectDropdown = document.getElementById('project');
         projectDropdown.innerHTML = ''
@@ -6865,12 +6878,12 @@ class TodoView {
             // edit todo component
             const editBtn = document.createElement('span');
             editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h43.92l427.93-427.92-43.93-43.93L200-243.92V-200Zm-40 40v-100.77l527.23-527.77q6.15-5.48 13.57-8.47 7.43-2.99 15.49-2.99t15.62 2.54q7.55 2.54 13.94 9.15l42.69 42.93q6.61 6.38 9.04 14 2.42 7.63 2.42 15.25 0 8.13-2.74 15.56-2.74 7.42-8.72 13.57L260.77-160H160Zm600.77-556.31-44.46-44.46 44.46 44.46ZM649.5-649.5l-21.58-22.35 43.93 43.93-22.35-21.58Z"/></svg>';
-            editBtn.addEventListener('click', e => this.handleEditProject(e));
+            editBtn.addEventListener('click', (e) => this.handleEditProject(e));
 
             // delete todo component
             const deleteBtn = document.createElement('span');
             deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M304.62-160q-26.85 0-45.74-18.88Q240-197.77 240-224.62V-720h-40v-40h160v-30.77h240V-760h160v40h-40v495.38q0 27.62-18.5 46.12Q683-160 655.38-160H304.62ZM680-720H280v495.38q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h350.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93V-720ZM392.31-280h40v-360h-40v360Zm135.38 0h40v-360h-40v360ZM280-720v520-520Z"/></svg>';
-            deleteBtn.addEventListener('click', e => this.handleDeleteProject(e));
+            deleteBtn.addEventListener('click', (e) => this.handleDeleteProject(e));
 
             const editDeleteSpan = document.createElement('span');
             editDeleteSpan.classList.add('todo-edit-buttons');
@@ -6896,7 +6909,18 @@ class TodoView {
         let projectItem = e.target;
         if (projectItem.nodeName === 'path') projectItem = projectItem.parentElement.parentElement.parentElement.parentElement;
         else if (projectItem.nodeName === 'svg') projectItem = projectItem.parentElement.parentElement.parentElement;
-        this.controller.controlDeleteProject(projectItem.textContent.slice(2))
+
+        const projectName = projectItem.textContent.slice(2);
+        this.controller.controlDeleteProject(projectName);
+
+        const todoList = this.controller.controlGetTodos();
+        todoList.forEach((todo) => {
+            if (todo.project === projectName) {
+                todo.project = 'Inbox';
+                this.controller.controlUpdateTodo(todo.id, todo);
+            }
+        });
+
     }
 
     handleEditProject(e) {
