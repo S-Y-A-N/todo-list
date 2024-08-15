@@ -42,6 +42,10 @@ export default class TodoController {
 
     initStoredProjects() {
         const storedProjects = JSON.parse(localStorage.getItem('projectList'));
+        if (storedProjects.length === 0) {
+            this.projectLogic.createProject('Inbox');
+            return;
+        }
         storedProjects.forEach((project) => this.projectLogic.createProject(project));
     }
 
