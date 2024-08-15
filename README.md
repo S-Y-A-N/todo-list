@@ -4,7 +4,7 @@ A simple todo list web application, done for [The Odin Project](https://www.theo
 
 ## Live Preview
 
-[Live Preview of the Project](https://s-y-a-n.github.io/restaurant-page)
+[Live Preview of the Project](https://s-y-a-n.github.io/todo-list/)
 
 ## Built With
 
