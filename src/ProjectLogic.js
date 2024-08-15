@@ -20,9 +20,19 @@ export default class ProjectLogic {
     }
 
     deleteProject(title) {
-        const index = this.projectList.findIndex(title);
-        this.projectList.splice(index, 1);
-        this.saveToLocal();
+        const index = this.projectList.findIndex((project) => project === title);
+        if (index !== -1) {
+            this.projectList.splice(index, 1);
+            this.saveToLocal();
+        }
+    }
+
+    updateProject(title, newTitle) {
+        const index = this.projectList.findIndex((project) => project === title);
+        if (index !== -1) {
+            this.projectList[index] = newTitle;
+            this.saveToLocal();
+        }
     }
 
     saveToLocal() {

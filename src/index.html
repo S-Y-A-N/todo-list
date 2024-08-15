@@ -94,7 +94,6 @@
                 </div>
     
                 <dialog id="addTodoDialog">
-                    
                     <form id="todoForm" action="#" method="dialog">
                         <textarea type="text" id="name" class="name-box" placeholder="Todo name" required></textarea>
                         <textarea type="text" id="desc" class="desc-box" placeholder="Description"></textarea>
@@ -111,7 +110,7 @@
                         </div>
                         <div class="button-container">
                             <button class="button cancel-btn" type="button" id="closeDialogBtn">Cancel</button>
-                            <button class="button submit-btn" type="submit" id="submitTodo">Add todo</button>
+                            <button class="button submit-btn todo-submit-button" type="submit" id="todo-create-button">Add todo</button>
                         </div>
                     </form>
                 </dialog>
@@ -123,19 +122,21 @@
 
                         <div class="button-container">
                             <button class="button cancel-btn" type="button" id="closeProjectDialogBtn">Cancel</button>
-                            <button class="button submit-btn" type="submit" id="submitProject">Create project</button>
+                            <button class="button submit-btn project-submit-button" type="submit" id="project-create-button">Create project</button>
                         </div>
                     </form>
                 </dialog>
 
                 <dialog id="settingsDialog">
-                    <div>
-                        <p>Settings</p>
-                        <button id="closeSettingsBtn">x</button>
-                    </div>
-
-                    <button id="deleteAll">Delete All Todos and Projects</button>
-                    <button id="restoreDefaults">Restore Defaults</button>
+                    <form method="dialog">
+                        <div>
+                            <p>Settings</p>
+                            <button id="closeSettingsBtn">x</button>
+                        </div>
+    
+                        <button id="deleteAll">Delete All Todos and Projects</button>
+                        <button id="restoreDefaults">Restore Defaults</button>
+                    </form>
                 </dialog>
     
             </main>

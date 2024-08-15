@@ -107,6 +107,9 @@ dialog:not([open]) {
 
 #settingsDialog {
     width: fit-content;
+}
+
+#settingsDialog form {
     display: flex;
     flex-direction: column;
 }
@@ -115,21 +118,21 @@ dialog:not([open]) {
     margin: 0 0 1rem 0;
 }
 
-#settingsDialog > button {
+#settingsDialog form > button {
     padding: .5rem 1rem;
     margin-bottom: 1rem;
 }
 
-#settingsDialog > button:last-child {
+#settingsDialog form > button:last-child {
     margin-bottom: 0;
 }
 
-#settingsDialog > div {
+#settingsDialog form > div {
     display: flex;
     justify-content: space-between;
 }
 
-#settingsDialog > div > button {
+#settingsDialog form > div > button {
     background: none;
     border: none;
     margin: 0 0 1rem 0;

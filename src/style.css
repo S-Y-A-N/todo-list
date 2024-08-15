@@ -2,19 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 :root {
-    --back-bg: rgb(255, 225, 225);
+    --back-bg: rgb(255, 245, 245);
     --todo-container: rgb(255, 200, 200);
     --highlight-normal: rgb(255, 150, 150);
     --highlight-invert: rgb(255, 80, 80);
     --active-light: rgb(255, 220, 220);
-    --gray: rgb(175, 175, 175);
-    --dark-gray: rgb(54, 54, 54);
-    --gray-highlight: rgb(233, 233, 233);
+    --gray: rgb(58, 58, 58);
+    --dark-gray: rgb(31, 31, 31);
+    --gray-highlight: rgb(221, 221, 221);
     --main-font: "Josefin Sans", sans-serif;
     --date-font: "Rubik", sans-serif;
     --text-color: #000;
 
-    --sidebar: rgb(241, 241, 241);
+    --sidebar:  rgb(255, 232, 232);
     --dialog: rgb(255, 255, 255);
     --selected: rgb(240, 255, 245);
     --mark-complete: rgb(84, 170, 50);

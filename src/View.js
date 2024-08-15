@@ -35,66 +35,110 @@ export default class TodoView {
     }
 
     initEventHandlers() {
-        // change theme to light/dark mode
-        this.themeBtn.addEventListener('click', this.handleChangeTheme);
+        this.themeBtn.addEventListener('click', () => this.handleChangeTheme());
 
-        // open 'add todo' dialog | cancel | submit todo
         this.dialogBtn.addEventListener('click', () => this.handleOpenDialog(this.addTodoDialog));
+
         this.closeDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addTodoDialog));
-        this.todoForm.addEventListener('submit', () => this.handleSubmitTodo());
 
-        // open 'add project' dialog | cancel
+        this.todoForm.addEventListener('submit', (e) => this.handleSubmitTodo(e));
+
         this.addProjectBtn.addEventListener('click', () => this.handleOpenDialog(this.addProjectDialog));
-        this.closeProjectDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addProjectDialog));
-        this.projectForm.addEventListener('submit', () => this.handleSubmitProject());
 
-        // autogrow the inputs
+        this.closeProjectDialogBtn.addEventListener('click', () => this.handleCloseDialog(this.addProjectDialog));
+
+        this.projectForm.addEventListener('submit', (e) => this.handleSubmitProject(e));
+
         Array.from(this.nameInputs).forEach(input => {
-            input.addEventListener('input', e => this.autoGrowInput(e.target));
+            input.addEventListener('input', (e) => this.autoGrowInput(e.target));
         });
 
         Array.from(this.descInputs).forEach(input => {
-            input.addEventListener('input', e => this.autoGrowInput(e.target));
+            input.addEventListener('input', (e) => this.autoGrowInput(e.target));
         });
 
-        // change page to inbox, today, etc...
         Array.from(this.pageTabs).forEach(button => {
-            button.addEventListener('click', e => this.handleChangePage(e));
+            button.addEventListener('click', (e) => this.handleChangePage(e));
         });
 
-        // change page to 'finished todos'
-        this.finishedTodosBtn.addEventListener('click', e => this.handleChangePage(e))
+        this.finishedTodosBtn.addEventListener('click', (e) => this.handleChangePage(e))
 
-        // show/hide projects
-        this.collapseProjectsBtn.addEventListener('click', this.handleCollapseProjects);
+        this.collapseProjectsBtn.addEventListener('click', () => this.handleCollapseProjects());
 
-        // open/close settings
         this.openSettingsBtn.addEventListener('click', () => this.handleOpenDialog(this.settingsDialog));
+
         this.closeSettingsBtn.addEventListener('click', () => this.handleCloseDialog(this.settingsDialog));
 
-        // delete all / restore defaults
         this.deleteAllBtn.addEventListener('click', () => this.handleDeleteAll());
+
         this.restoreDefaultsBtn.addEventListener('click', () => this.handleRestoreDefaults());
 
     }
 
-    handleSubmitProject() {
-        const projectName = document.getElementById('projectName').value;
-        this.controller.controlCreateProject(projectName);
-        this.projectForm.reset();
+    handleSubmitProject(e) {
+        const submitter = e.submitter;
+        if (submitter.id === 'project-create-button') {
+            this.handleCreateProjectSubmit();
+        } else if (submitter.id === 'project-update-button') {
+            this.handleUpdateProjectSubmit();
+        }
     }
 
-    handleSubmitTodo() {
+    handleCreateProjectSubmit() {
+        const projectName = this.getProjectFormInput();
+        this.controller.controlCreateProject(projectName);
+        this.todoForm.reset();
+    }
+
+    handleUpdateProjectSubmit() {
+        const selectedProject = document.querySelector('.selected-project');
+        const oldName = selectedProject.textContent.slice(2);
+        const newName = this.getProjectFormInput();
+
+        this.controller.controlUpdateProject(oldName, newName);
+        this.projectForm.reset();
+
+        // reset submitter id
+        const submitter = document.querySelector('.project-submit-button');
+        submitter.id = 'project-create-button';
+        submitter.textContent = 'Create Project';
+
+    }
+
+    handleSubmitTodo(e) {
+        const submitter = e.submitter;
+        if (submitter.id === 'todo-create-button') {
+            this.handleCreateTodoSubmit();
+        } else if (submitter.id === 'todo-update-button') {
+            this.handleUpdateTodoSubmit();
+        }
+    }
+
+    handleCreateTodoSubmit() {
         const todoData = this.getTodoFormInputs();
         this.controller.controlCreateTodo(todoData);
         this.todoForm.reset();
     }
 
-    handleUpdateTodo(todoId) {
+    handleUpdateTodoSubmit() {
+        const selectedTodo = document.querySelector('.selected-todo');
         const newData = this.getTodoFormInputs();
-        this.controller.controlUpdateTodo(todoId, newData);
-        this.controller.controlDeleteTodo(todoId)
+        this.controller.controlUpdateTodo(selectedTodo.id, newData);
         this.todoForm.reset();
+
+        // reset submitter id
+        const submitter = document.querySelector('.todo-submit-button');
+        submitter.id = 'todo-create-button';
+    }
+
+    getProjectFormInput() {
+        const projectInput = document.getElementById('projectName');
+        return projectInput.value;
+    }
+
+    setProjectFormInput(projectName) {
+        const projectInput = document.getElementById('projectName');
+        projectInput.value = projectName;
     }
 
     getTodoFormInputs() {
@@ -103,6 +147,7 @@ export default class TodoView {
         const projectInput = document.getElementById('project');
         const priorityInput = document.getElementById('priority');
         const dateInput = document.getElementById('date');
+
         const todoData = {
             name: nameInput.value,
             desc: descInput.value,
@@ -121,11 +166,12 @@ export default class TodoView {
         const priorityInput = document.getElementById('priority');
         const dateInput = document.getElementById('date');
 
+        console.log(todoData)
         nameInput.value = todoData.name;
         descInput.value = todoData.desc;
         projectInput.value = todoData.project;
         priorityInput.value = todoData.priority;
-        dateInput.value = todoData.dueDate;
+        dateInput.value = format(todoData.dueDate, "yyyy-MM-dd");
     }
 
     displayTodoItems(todoList) {
@@ -144,13 +190,11 @@ export default class TodoView {
         // sorts todo list by due date (ascending)
         todoList.sort((todo1, todo2) => makeNewDate(todo1.dueDate) - makeNewDate(todo2.dueDate))
 
-
         todoList.forEach(todo => {
             this.handleAddTodo(todo);
         });
 
-
-        // if View!todoList is empty (all complete), displays 'no todos' message
+        // if View!todoList is empty, displays 'no todos' message
         if (this.todoList.innerHTML === "") {
             this.handleNoTodos();
         }
@@ -307,10 +351,13 @@ export default class TodoView {
         if (todoItem.nodeName === 'path') todoItem = todoItem.parentElement.parentElement.parentElement.parentElement.parentElement;
         else if (todoItem.nodeName === 'svg') todoItem = todoItem.parentElement.parentElement.parentElement.parentElement;
 
+        todoItem.classList.add('selected-todo')
+        const submitter = document.querySelector('.todo-submit-button')
+        submitter.id = 'todo-update-button';
+
         const oldData = this.controller.controlGetTodoById(todoItem.id);
         this.setTodoFormInputs(oldData);
         this.handleOpenDialog(this.addTodoDialog);
-        this.todoForm.addEventListener('submit', () => this.handleUpdateTodo(todoItem.id));
     }
 
     handleToggleComplete(e) {
@@ -343,12 +390,56 @@ export default class TodoView {
             // skips displaying 'inbox' in sidebar
             if (project.toLowerCase() === 'inbox') return;
 
+            // edit todo component
+            const editBtn = document.createElement('span');
+            editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-200h43.92l427.93-427.92-43.93-43.93L200-243.92V-200Zm-40 40v-100.77l527.23-527.77q6.15-5.48 13.57-8.47 7.43-2.99 15.49-2.99t15.62 2.54q7.55 2.54 13.94 9.15l42.69 42.93q6.61 6.38 9.04 14 2.42 7.63 2.42 15.25 0 8.13-2.74 15.56-2.74 7.42-8.72 13.57L260.77-160H160Zm600.77-556.31-44.46-44.46 44.46 44.46ZM649.5-649.5l-21.58-22.35 43.93 43.93-22.35-21.58Z"/></svg>';
+            editBtn.addEventListener('click', e => this.handleEditProject(e));
+
+            // delete todo component
+            const deleteBtn = document.createElement('span');
+            deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M304.62-160q-26.85 0-45.74-18.88Q240-197.77 240-224.62V-720h-40v-40h160v-30.77h240V-760h160v40h-40v495.38q0 27.62-18.5 46.12Q683-160 655.38-160H304.62ZM680-720H280v495.38q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h350.76q9.24 0 16.93-7.69 7.69-7.69 7.69-16.93V-720ZM392.31-280h40v-360h-40v360Zm135.38 0h40v-360h-40v360ZM280-720v520-520Z"/></svg>';
+            deleteBtn.addEventListener('click', e => this.handleDeleteProject(e));
+
+            const editDeleteSpan = document.createElement('span');
+            editDeleteSpan.classList.add('todo-edit-buttons');
+            editDeleteSpan.classList.add('opacity-0')
+            editDeleteSpan.appendChild(editBtn);    
+            editDeleteSpan.appendChild(deleteBtn); 
+
             // displays project in sidebar
             const button = document.createElement('button');
             button.textContent = `# ${project}`;
             projectNav.appendChild(button);
+
+            button.appendChild(editDeleteSpan);
+
             button.addEventListener('click', e => this.handleChangePage(e));
+
+            button.addEventListener('mouseenter', this.handleTodoHover);
+            button.addEventListener('mouseleave', this.handleTodoHover);
         });
+    }
+
+    handleDeleteProject(e) {
+        let projectItem = e.target;
+        if (projectItem.nodeName === 'path') projectItem = projectItem.parentElement.parentElement.parentElement.parentElement;
+        else if (projectItem.nodeName === 'svg') projectItem = projectItem.parentElement.parentElement.parentElement;
+        this.controller.controlDeleteProject(projectItem.textContent.slice(2))
+    }
+
+    handleEditProject(e) {
+        let projectItem = e.target;
+        if (projectItem.nodeName === 'path') projectItem = projectItem.parentElement.parentElement.parentElement.parentElement;
+        else if (projectItem.nodeName === 'svg') projectItem = projectItem.parentElement.parentElement.parentElement;
+
+        projectItem.classList.add('selected-project');
+        const submitter = document.querySelector('.project-submit-button');
+        submitter.id = 'project-update-button';
+        submitter.textContent = 'Update Project';
+
+        const oldName = projectItem.textContent.slice(2);
+        this.setProjectFormInput(oldName);
+        this.handleOpenDialog(this.addProjectDialog);
     }
 
     handleOpenDialog(dialog) {
@@ -395,12 +486,17 @@ export default class TodoView {
     }
 
     handleChangePage(e) {
+        
         let clickedTab = e;
+
         if (e instanceof PointerEvent) {
             clickedTab = e.target;
             if (clickedTab.nodeName === 'path') clickedTab = clickedTab.parentElement.parentElement;
             else if (clickedTab.nodeName === 'svg') clickedTab = clickedTab.parentElement;
         }
+
+        if (e.target.parentElement.parentElement.classList.contains('todo-edit-buttons') ||
+            e.target.parentElement.parentElement.parentElement.classList.contains('todo-edit-buttons')) { return; }
 
         this.styleSelectedTab(clickedTab)
 

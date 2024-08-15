@@ -127,8 +127,13 @@ export default class TodoController {
         return this.projectLogic.getProjects();
     }
 
-    controlDeleteProject() {
-        this.projectLogic.createProject(projectTitle);
+    controlDeleteProject(projectTitle) {
+        this.projectLogic.deleteProject(projectTitle);
+        this.controlProjectDisplay();
+    }
+
+    controlUpdateProject(oldName, newName) {
+        this.projectLogic.updateProject(oldName, newName);
         this.controlProjectDisplay();
     }
 

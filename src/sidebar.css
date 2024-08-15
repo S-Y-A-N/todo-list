@@ -97,6 +97,9 @@ button.selected-tab {
 
 #projectTabs button {
     margin-bottom: 4px;
+
+    display: flex;
+    justify-content: space-between;
 }
 
 .sidebar-bottom {
