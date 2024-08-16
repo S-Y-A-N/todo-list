@@ -8,4 +8,4 @@ A simple todo list web application, done for [The Odin Project](https://www.theo
 
 ## Built With
 
-* HTML, CSS, JS, Webpack
+- HTML, CSS, JS, Webpack

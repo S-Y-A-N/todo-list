@@ -8,7 +8,8 @@
     "build": "webpack --config webpack.prod.js",
     "start": "webpack serve --open --config webpack.dev.js",
     "gh": "git subtree push --prefix dist origin gh-pages",
-    "dist": "git commit -m 'Rebuild' dist/"
+    "dist": "git commit -m 'Rebuild' dist/",
+    "lint": "npx eslint src/*.js"
   },
   "repository": {
     "type": "git",
@@ -21,10 +22,14 @@
   },
   "homepage": "https://github.com/S-Y-A-N/todo-list#readme",
   "devDependencies": {
+    "@eslint/js": "^9.9.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
+    "eslint": "^8.57.0",
+    "globals": "^15.9.0",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.8.1",
+    "prettier": "3.3.3",
     "style-loader": "^4.0.0",
     "svg-inline-loader": "^0.8.2",
     "webpack": "^5.91.0",
